@@ -20,6 +20,6 @@
 		 - place_number (int duljine 1) // broj mjesta u autu
 		 
 -> ratings - drive_id (int duljine 2)
-		   - driver_id (int duljine 2)
+		   - user_id (int duljine 2)		// korisnik koji ostavlja komentar
 		   - comment (varchar duljine 100)
 		   - rating (int duljine 4 - npr 4.78)
