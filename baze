@@ -1,0 +1,25 @@
+-> users - id (int duljine 2)
+		 - username (varchar duljine 20)
+		 - password (zasad - varchar duljine 10)
+		 - year (int duljine 4 - npr 1995)
+		 - mail (varchar duljine 30)
+
+-> drivers - driver_id (int duljine 2)
+           - car_type (varchar duljine 20)
+		   - car_model (varchar duljine 20)
+		   - rating (int duljine 4 - npr 4.78) // zaokruzimo na 2 decimale
+
+-> drive - drive_id (int duljine 2)
+         - driver_id (int duljine 2)
+		 - start_place (varchar duljine 20)
+		 - end_place (varchar duljine 20)
+		 - date (varcher duljine 10 - npr 2018-10-05 )
+		 - start_time (varchar duljine 5 - npr 06:30 )
+		 - end_time (varchar duljine 5)
+		 - price (varchar duljine 5 - npr 100 )
+		 - place_number (int duljine 1) // broj mjesta u autu
+		 
+-> ratings - drive_id (int duljine 2)
+		   - driver_id (int duljine 2)
+		   - comment (varchar duljine 100)
+		   - rating (int duljine 4 - npr 4.78)
