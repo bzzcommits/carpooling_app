@@ -1,6 +1,6 @@
 -> users - id (int duljine 2)
 		 - username (varchar duljine 20)
-		 - password (zasad - varchar duljine 10)
+		 - password (zasad - varchar duljine 20)
 		 - year (int duljine 4 - npr 1995)
 		 - mail (varchar duljine 30)
 
