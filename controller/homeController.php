@@ -23,42 +23,35 @@ class HomeController extends BaseController
 						if( isset( $_POST[ 'username' ] ) && isset( $_POST[ 'password' ] ) && $_POST[ 'username' ] != '' && $_POST[ 'password' ] != '' )
 						{
 								if( !preg_match( '/^[a-zA-Z]{3,10}$/', $_POST['username'] ) )
-								{
 										$this->registry->template->message = "A username must have between 3 and 10 letters!";
-										$this->registry->template->show( 'login_index' );
-										exit();
-								}
-
-								$as = new AuthenticationService();
-
-								$user = $as->validateUser( $_POST["username"], $_POST["password"]);
-
-								switch( $user )
+								else
 								{
-										case 0:
-												$this->registry->template->message = "You haven't signed up yet!";
-												$this->registry->template->show( 'login_index' );
-												exit();
-										case -1:
-												$this->registry->template->message = "Wrong password!";
-												$this->registry->template->show( 'login_index' );
-												exit();
-										case -2:
-												$this->registry->template->message = "You haven't registered yet!";
-												$this->registry->template->show( 'login_index' );
-												exit();
-										case 1:
-												$_SESSION[ 'user_id' ] = $user->id;
-												$_SESSION[ 'username' ] = $user->username;
-												header( 'Location: ' . __SITE_URL . '/index.php?rt=home' );
-												exit();
+										$as = new AuthenticationService();
+
+										$user = $as->validateUser( $_POST["username"], $_POST["password"]);
+
+										switch( $user )
+										{
+												case 0:
+														$this->registry->template->message = "You haven't signed up yet!";
+														break;
+												case -1:
+														$this->registry->template->message = "Wrong password!";
+														break;
+												case -2:
+														$this->registry->template->message = "You haven't registered yet!";
+														break;
+												case 1:
+														$_SESSION[ 'user_id' ] = $user->id;
+														$_SESSION[ 'username' ] = $user->username;
+														header( 'Location: ' . __SITE_URL . '/index.php?rt=home' );
+														exit();
+										}
 								}
+
 						}
 						else
-						{
 								$this->registry->template->message = "Enter both username and password!";
-								$this->registry->template->show( 'login_index' );
-						}
 				}
 				else
 				{
@@ -67,71 +60,58 @@ class HomeController extends BaseController
 								header( 'Location: ' . __SITE_URL . '/index.php?rt=home' );
 								exit();
 						}
-
-						$this->registry->template->show( 'login_index' );
-						exit();
 				}
+				$this->registry->template->show( 'login_index' );
+				exit();
 		}
 
 		public function signup()
 		{
-			if( isset( $_POST[ 'signup' ] ) )
-			{
-					if( isset( $_POST[ 'username' ] ) && isset( $_POST[ 'password' ] ) && isset( $_POST[ 'email' ] )
-					&& $_POST[ 'username' ] != '' && $_POST[ 'password' ] != '' && $_POST[ 'email' ] != '' )
-					{
-							if( !preg_match( '/^[a-zA-Z]{3,10}$/', $_POST['username'] ) )
-							{
-									$this->registry->template->message = "A username must have between 3 and 10 letters!";
-									$this->registry->template->show( 'signup_index' );
-									exit();
-							}
-							else if( !filter_var( $_POST['email'], FILTER_VALIDATE_EMAIL) )
-							{
-									$this->registry->template->message = "Enter valid e-mail address!";
-									$this->registry->template->show( 'signup_index' );
-									exit();
-							}
+				if( isset( $_POST[ 'signup' ] ) )
+				{
+						if( isset( $_POST[ 'username' ] ) && isset( $_POST[ 'password' ] ) && isset( $_POST[ 'email' ] )
+						&& $_POST[ 'username' ] != '' && $_POST[ 'password' ] != '' && $_POST[ 'email' ] != '' )
+						{
+								if( !preg_match( '/^[a-zA-Z]{3,10}$/', $_POST['username'] ) )
+										$this->registry->template->message = "A username must have between 3 and 10 letters!";
 
-							$as = new AuthenticationService();
+								else if( !filter_var( $_POST['email'], FILTER_VALIDATE_EMAIL) )
+										$this->registry->template->message = "Enter valid e-mail address!";
 
-							$user = $as->signupUser( $_POST[ 'username' ], $_POST[ 'password' ], $_POST[ 'email' ] );
+								else
+								{
+										$as = new AuthenticationService();
 
-							switch( $user )
-							{
-									case 0:
-											$this->registry->template->message = "This username is taken!";
-											$this->registry->template->show( 'signup_index' );
-											exit();
-									case -1:
-											$this->registry->template->message = "Greška: ne mogu poslati mail. (Pokrenite na rp2 serveru.)!";
-											$this->registry->template->show( 'signup_index' );
-											exit();
-									case 1:
-											$this->registry->template->message = 'You\'ve just signed up!';
-											$this->registry->template->show( 'home_index' );
-											exit();
-							}
-							exit();
-					}
-					else
-					{
-							$this->registry->template->message = "Enter username, password and e-mail address!";
-							$this->registry->template->show( 'signup_index' );
-							exit();
-					}
-			}
-			else
-			{
-					if( isset( $_SESSION[ 'username' ] ) )
-					{
-							header( 'Location: ' . __SITE_URL . '/index.php?rt=home' );
-							exit();
-					}
+										$user = $as->signupUser( $_POST[ 'username' ], $_POST[ 'password' ], $_POST[ 'email' ] );
 
-					$this->registry->template->show( 'signup_index' );
-					exit();
-			}
+										switch( $user )
+										{
+												case 0:
+														$this->registry->template->message = "Entered username or e-mail address already exists!";
+														break;
+												case -1:
+														$this->registry->template->message = "E-mail couldn't have been sent!";
+														break;
+												case 1:
+														$this->registry->template->message = 'You\'ve just signed up!';
+														break;
+										}
+								}
+
+						}
+						else
+								$this->registry->template->message = "Enter username, password and e-mail address!";
+				}
+				else
+				{
+						if( isset( $_SESSION[ 'username' ] ) )
+						{
+								header( 'Location: ' . __SITE_URL . '/index.php?rt=home' );
+								exit();
+						}
+				}
+				$this->registry->template->show( 'signup_index' );
+				exit();
 		}
 
 		function logout()

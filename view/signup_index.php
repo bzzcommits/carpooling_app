@@ -5,12 +5,16 @@
     <input type="text" name="username" />
     <br />
     Password:
-    <input type="password" name="password" />
+    <input type="password" name="password" id="psw"/>
+    <br />
+    Confirm password:
+    <input type="password" name="confirm" id="cnf" />
+    <label id="mssg"></label>
     <br />
     E-mail address:
     <input type="text" name="email" />
     <br />
-    <button type="submit" name="signup">Sign up!</button>
+    <button type="submit" name="signup" id="sgnup">Sign up!</button>
   </form>
 
 <?php

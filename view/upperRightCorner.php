@@ -2,7 +2,7 @@
 if( isset( $_SESSION[ 'username' ] ) )
 {
   echo "<h1>" . $_SESSION[ 'username' ] . "</h1>" . 
-  "<h3><a href=\"". __SITE_URL ."/index.php?rt=home/logout\">logout</a></h3>";
+  "<h3><a id='lgout' href=\"". __SITE_URL ."/index.php?rt=home/logout\">logout</a></h3>";
 }
 else
 {

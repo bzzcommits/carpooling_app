@@ -30,8 +30,8 @@ class AuthenticationService{
 
     try
 		{
-			$st = $db->prepare( 'SELECT * FROM users WHERE username = :username' );
-			$st->execute( array( 'username' => $username ) );
+			$st = $db->prepare( 'SELECT * FROM users WHERE username = :username OR mail = :email' );
+			$st->execute( array( 'username' => $username, 'email' => $email ) );
 		}
 		catch( PDOException $e ) { exit( 'PDO error ' . $e->getMessage() ); }
 
