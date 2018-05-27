@@ -40,4 +40,28 @@ class CarService
 		}
 		return $arr;
 	}
+	//tu cemo unositi nove voznju
+	function offerDrive ( $drive )
+	{
+		try
+		{
+			$db = DB::getConnection();
+			$st = $db->prepare( 'INSERT INTO drive(driver_id, start_place, end_place, ' . 
+								'`date`, start_time, end_time, price, place_number) VALUES ' . 
+								' (:dr_id, :place1, :place2, :datum, :time1, :time2, :price, :seats)' );
+			$st->execute( array( 'dr_id' => $_SESSION['id_user'], 
+								 'place1' => $drive->start_place, 
+								 'place2' => $drive->end_place, 
+								 'datum' => $drive->date,
+								 'time1' => $drive->start_time,
+								 'time2' => $drive->end_time,
+								 'price' => $drive->price,
+								 'seats' => $drive->place_number) );
+		}
+		catch( PDOException $e ) 
+		{ 
+			exit( 'PDO error ' . $e->getMessage() ); 
+		}
+		
+	}
 }
