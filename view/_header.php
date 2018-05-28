@@ -24,7 +24,7 @@
   <link rel="stylesheet" href="<?php //echo '__SITE_URL';?>/css/style.css">
   -->
   <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.3.1/jquery.js"></script>
-  <script src="<?php echo '__SITE_URL';?>/js/skripta.js"></script>
+  <script src="<?php echo __SITE_URL;?>/js/skripta.js"></script>
 
   <!-- iza ide jos title, po potrebi ako nesto bas za tu stranicu treba i </head> i onda <body> -->
   
