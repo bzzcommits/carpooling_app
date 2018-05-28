@@ -94,7 +94,7 @@ require_once __SITE_PATH . '/view/menu.php';
 			</div>
 
 			<div class="form-group">
-				<label for="TimeEndNew">Estimated time of arriving (hh:mm)</label>
+				<label for="TimeEndNew">Estimated time of arrival (hh:mm)</label>
 				<input class="form-control" id="TimeEndNew" type="text" placeholder="Enter estimated time of arriving" name="end_time_new" />
 			</div>
 
