@@ -6,7 +6,7 @@ if( isset( $_SESSION[ 'username' ] ) )
   <ul class="navbar-nav ml-auto">        
         
 	<li class="nav-item">
-	  <a id="lgout" class="nav-link" href="<?php echo __SITE_URL; ?>/index.php?rt=home">
+	  <a id="lgout" class="nav-link" href="<?php echo __SITE_URL; ?>/index.php?rt=home/logout">
 		<i class="fa fa-fw fa-sign-out"></i> Logout </a>
 	</li>
   </ul>
@@ -27,7 +27,7 @@ else
 		</li>
 		
 		<li class="nav-item">
-		  <a id="lgout" class="nav-link" href="<?php echo __SITE_URL; ?>/index.php?rt=home/signup">
+		  <a class="nav-link" href="<?php echo __SITE_URL; ?>/index.php?rt=home/signup">
 			<i class="fa fa-user-plus"></i> Sign up </a>
 		</li>
 
