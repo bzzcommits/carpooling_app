@@ -27,4 +27,3 @@
   <script src="<?php echo __SITE_URL;?>/js/skripta.js"></script>
 
   <!-- iza ide jos title, po potrebi ako nesto bas za tu stranicu treba i </head> i onda <body> -->
-  

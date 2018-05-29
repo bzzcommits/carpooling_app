@@ -1,6 +1,8 @@
+
 <?php
 require_once __SITE_PATH . '/view/_header.php';
 ?>
+
 <!--
 <form method="post" action="<?php //echo __SITE_URL; ?>/index.php?rt=pretrazi/searchResults">
 	Start:
@@ -66,6 +68,7 @@ else {
               <thead>
                 <tr>
                   <th>Userame</th>
+                  <th>Rating</th>
                   <th>Start time</th>
                   <th>ETA</th>
                   <th>Price</th>
@@ -79,12 +82,13 @@ else {
 					foreach( $resDrive as $x ){
 						echo '<tr>' .
 							 '<td>' . $x->username . '</td>' .
-						     '<td>' . $x->start_time . '</td>' .
-						     '<td>' . $x->end_time . '</td>' .
-						     '<td>' . $x->price . '</td>' .
-						     '<td>' . $x->place_number. '</td>' .
-								 '<td> <form method="post" action="' . __SITE_URL . '/index.php?rt=pretrazi/index">
-		 							<button type="submit" name="reserve" class="btn btn-primary btn-block">Reserve now!</button>
+               '<td>' . $x->rating . '</td>' .
+						   '<td>' . $x->start_time . '</td>' .
+						   '<td>' . $x->end_time . '</td>' .
+						   '<td>' . $x->price . '</td>' .
+						   '<td>' . $x->place_number. '</td>' .
+							'<td> <form method="post" action="' . __SITE_URL . '/index.php?rt=pretrazi/rezerviraj">
+		 							<button type="submit" name="rezervacija" value="' . $x->drive_id . '" class="btn btn-primary btn-block">Reserve now!</button>
 		 						</form> </td>' .
 							 '</tr>';
 				    }

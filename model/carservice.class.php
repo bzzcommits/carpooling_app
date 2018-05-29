@@ -2,44 +2,65 @@
 
 class CarService
 {
-
-	function getUsernameFromId ( $id_driver )
+	function searchDrive( $start_place, $end_place, $date, $sort)
 	{
-		try
+		if ($_POST['sort'] === 'price')
 		{
-			$db = DB::getConnection();
-			$st = $db->prepare( 'SELECT username FROM users WHERE id=:id_driver');
-			$st->execute( array( 'id_driver' => $id_driver ) );
-		}
-		catch( PDOException $e ) { exit( 'PDO error ' . $e->getMessage() ); }
+			try
+			{
 
-		$row = $st->fetch();
-		if( $row === false )
-			return null;
+				$db = DB::getConnection();
+				$st = $db->prepare( 'SELECT drive.driver_id, drive.start_place, drive.end_place, drive.`date`, drive.start_time,
+					drive.end_time, drive.price, drive.place_number, users.username, drivers.rating, drive.drive_id
+					FROM drive, drivers, users
+					WHERE drive.driver_id=drivers.driver_id AND drive.driver_id=users.id AND drive.start_place=:start_place AND drive.end_place=:end_place AND drive.`date`=:date_
+					ORDER BY drive.price');
+
+				$st->execute( array( 'start_place' => $start_place, 'end_place' => $end_place, 'date_' => $date) );
+			}
+			catch( PDOException $e ) { exit( 'PDO error ' . $e->getMessage() ); }
+		}
 		else
-			return $row['username'] ;
-	}
-
-	function searchDrive( $start_place, $end_place, $date )
-	{
-		try
 		{
-			$db = DB::getConnection();
-			$st = $db->prepare( 'SELECT driver_id, start_place, end_place, `date`, start_time, end_time, price, place_number FROM drive WHERE start_place=:start_place AND end_place=:end_place AND `date`=:date_' );
-			$st->execute( array( 'start_place' => $start_place, 'end_place' => $end_place, 'date_' => $date ) );
-		}
-		catch( PDOException $e ) { exit( 'PDO error ' . $e->getMessage() ); }
+			try
+			{
 
+				$db = DB::getConnection();
+				$st = $db->prepare( 'SELECT drive.driver_id, drive.start_place, drive.end_place, drive.`date`, drive.start_time,
+					drive.end_time, drive.price, drive.place_number, users.username, drivers.rating, drive.drive_id
+					FROM drive, drivers, users
+					WHERE drive.driver_id=drivers.driver_id AND drive.driver_id=users.id AND drive.start_place=:start_place AND drive.end_place=:end_place AND drive.`date`=:date_
+					ORDER BY drivers.rating DESC');
+
+				$st->execute( array( 'start_place' => $start_place, 'end_place' => $end_place, 'date_' => $date ) );
+			}
+			catch( PDOException $e ) { exit( 'PDO error ' . $e->getMessage() ); }
+		}
 		if ($st->rowCount() === 0) return null;
 		$arr = array();
 		while ($row = $st->fetch())
 		{
-
-			$username = $this->getUsernameFromId ($row['driver_id']);
-			$arr[] = new Drive( $row['driver_id'], $row['start_place'], $row['end_place'], $row['date'], $row['start_time'], $row['end_time'], $row['price'], $row['place_number'], $username );
+			$arr[] = new Drive( $row['driver_id'], $row['start_place'], $row['end_place'], $row['date'], $row['start_time'], $row['end_time'],
+													$row['price'], $row['place_number'], $row['username'], $row['rating'], $row['drive_id'] );
 		}
 		return $arr;
 	}
+
+	function reserveDrive ($drive_id)
+	{
+		try
+		{
+			$db = DB::getConnection();
+			$st = $db->prepare( 'INSERT INTO ratings(drive_id, user_id, comment, rating)
+								VALUES (:drive_id, :user_id, "nema", -1)' );
+			$st->execute( array( 'drive_id' => $drive_id, 'user_id' => $_SESSION['user_id']) );
+		}
+		catch( PDOException $e )
+		{
+			exit( 'PDO error ' . $e->getMessage() );
+		}
+	}
+
 	//tu cemo unositi nove voznju
 	function offerDrive ( $drive )
 	{	//drive_id napraviti da se automatski povećava

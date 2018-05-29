@@ -58,9 +58,14 @@ require_once __SITE_PATH . '/view/menu.php';
 				<input class="form-control" id="Date" type="text" placeholder="Enter date" name="date" />
 			</div>
 
+      Sorted by
+      <select name="sort" id="sort">
+        <option value="price">price</option>
+        <option value="rating">rating</option>
+      </select> <br/><br/>
+
 			<button type="submit" name="search" class="btn btn-primary btn-block">Search</button>
 		</form>
-
     </div>
 	</div>
 
