@@ -6,3 +6,4 @@ Posao:
 - logiranje i registriranje (18.5.) - Maja
 - ispis vožnje (24.5.) - Ana
 - uređivanje i dodavanje nove vožnje (27.5.) - Ema
+- rezervacija vožnje (29.5.) - Ana
