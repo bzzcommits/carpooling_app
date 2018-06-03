@@ -15,7 +15,7 @@ class UserService
 		try
 		{
 			$db = DB::getConnection();
-			$st = $db->prepare('SELECT year, telephone, mail FROM users WHERE username LIKE :username');
+			$st = $db->prepare('SELECT id, year, telephone, mail FROM users WHERE username LIKE :username');
 			$st->execute( array('username' => $username) );
 		}
 		catch( PDOException $e )
@@ -24,7 +24,7 @@ class UserService
 		}
 
 		$row = $st->fetch();
-		$info = new User($_SESSION['username'], $row['year'], $row['telephone'],  $row['mail']);
+		$info = new User($row['id'], $username, $row['year'], $row['telephone'],  $row['mail']);
 		return $info;
 	}
 
