@@ -36,7 +36,7 @@
         
 		<!-- promijeniti href !! -->
         <li class="nav-item" data-toggle="tooltip" data-placement="right" title="Contact">
-          <a class="nav-link" href="">
+          <a class="nav-link" href="<?php echo __SITE_URL; ?>/index.php?rt=contact">
             <i class="fa fa-info-circle"></i>
             <span class="nav-link-text">Contact</span>
           </a>
