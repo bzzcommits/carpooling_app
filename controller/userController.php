@@ -2,15 +2,16 @@
 
 class userController extends BaseController
 {
-	/*Kod ucitavanja Profile stranice, ispisuju se podaci iz baze
-	  Ako je vozac, ispisuju se dodatne stvari.
-
+	/*
 	  Treba dodati:
 	  -> funkcije koje su na kraju file-a
-
 	*/
 
 	public function index() {
+
+		echo "username: " . $_SESSION['username'];
+		echo "     user_id: " . $_SESSION['user_id'];
+
 
 		$us = new UserService;
 		$user_id =$us->getIdByUsername($_SESSION['username']);
@@ -81,29 +82,43 @@ class userController extends BaseController
 
 
 
-	/*FUNKCIJE KOJE JOS TREBA NAPISATI*/
 
 	// korisnik otkazuje neku nadolazecu voznju (klikom na gumb u profile_index.php)
 	public function otkazanaRezervacija () {
+		// izbrisati redak iz ratingsa (jer jedino tu pamtimo rezervacije)
+		$id_voznje = (int) $_POST['idVoznje'];
 
-		// tijelo funkcije
-		userController::index();
+		$us = new UserService;
+		$us->deleteReservation( $id_voznje );
 
+		// ne treba nista poslat
+		$message = [];
+		userController::sendJSONandExit( $message );
 	}
 
 	// vozac otkazuje neku svoju voznju (klikom na gumb u profile_index.php)
 	public function otkazanaVoznja() {
+		$id_voznje = (int) $_POST['idVoznje'];
 
-		// tijelo funkcije
-		userController::index();
+		$us = new UserService;
+		$us->deleteDrive( $id_voznje );
+
+		// ne treba nista poslat
+		$message = [];
+		userController::sendJSONandExit( $message );
 	}
 
 	// korisnik je procitao poruku o nekoj voznji koju je imao rezerviranu, a vozac ju je otkazao (klikom na gumb u profile_index.php)
-	//	-> treba obrisati pripadni redak iz tablice
 	public function procitanaPoruka() {
 
-		// tijelo funkcije
-		userController::index();
+		$id_voznje = (int) $_POST['idVoznje'];
+
+		$us = new UserService;
+		$us->deleteRating( $id_voznje );
+
+		// ne treba nista poslat
+		$message = [];
+		userController::sendJSONandExit( $message );
 	}
 
 	// korisnik je na svojoj stranici unio komentar i ocjenu za neku voznju (klikom na gumb u profile_index.php)
@@ -111,6 +126,14 @@ class userController extends BaseController
 
 		// tijelo funkcije
 		userController::index();
+	}
+
+
+	public function sendJSONandExit( $message ) {
+		  header( 'Content-type:application/json;charset=utf-8' );
+		  echo json_encode( $message );
+		  flush();
+		  //exit( 0 );
 	}
 };
 
