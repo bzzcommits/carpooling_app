@@ -1,11 +1,4 @@
 <?php
-/*
-	-> vozacu omoguciti da otkaze voznju
-		-> u tom slucaju, svi korisnici moraju dobiti obavijest da je voznja otkazana
-		-> nova tablica? ili novi stupac (otkazana) u neku od postojecih tablica
-			-> npr u drive ( a u ratings imamo popis ljudi koje moramo obavijestiti
-					-> kad neko vidi obavijest, moze ju zatvoriti i tada se brise iz tablice ratings)
-*/
 
 class UserService
 {
@@ -242,6 +235,9 @@ class UserService
 	/*Mozemo (ne moramo) promijeniti: da controller prvo dobije id pomocu getIdByUsername, pa onda s
 	  tim id-om zove ove gettere i "settere", da se ne kopira nepotrebno kod gdje se prvo pomocu
 	  username-a uzima id*/
+	/*NAPOMENA: nisam na pocetku skuzila da pamtimo id u sessionu, pa sam svugdje slala id.
+				Nije greska, ali se radi nepotreban posao.
+				(Anastasija)*/
 	function getCarType($id){
 		try
 		{
@@ -367,14 +363,31 @@ class UserService
 
 	function getReservationsAndNoComment($id) {
 		// nadi sve voznje_id, gdje nije postavljena ocjena
+		// -> ako se voznja nalazi u tablici deleted_drive, spremi ga u polje poruka koje korisnik mora procitati
 		// -> ako je datum voznje prosao, spremi ga u polje voznji koje vozac jos nije ocijenio
 		// -> ako datum voznje jos nije prosao, znaci da je to trenutno rezervirana voznja
-		// Dakle, voznje cemo spremati u dva polja, ovisno o datumu.
-		// kao povratnu vrijednost, f-ja salje polje koje se sastoji od ta dva polja.
-		// u viewu cemo ispisat oboje: i rezervacije i voznje bez komentara
+		// Dakle, voznje cemo spremati u tri polja.
+		// kao povratnu vrijednost, f-ja salje polje koje se sastoji od ta tri polja.
+		// u viewu cemo ispisat sve tri: i rezervacije i voznje bez komentara i otkazane voznje
 		$trenutniDatum = date("Y-m-d");	// trenutni datum i vrijeme
 		$trenutnoVrijeme = date("H:i");
 
+		// nadi sve id-jeve iz deleted_drive
+		try
+		{
+			$db = DB::getConnection();
+			$st = $db->prepare('SELECT drive_id FROM deleted_drive');
+			$st->execute();
+		}
+		catch( PDOException $e )
+		{
+			exit( 'PDO error in class UserService function getReservations:  ' . $e->getMessage() );
+		}
+		$izbrisaniElementi = array();
+		foreach( $st->fetchAll() as $row )
+			$izbrisaniElementi[] = $row['drive_id'];
+
+		// nadi sve voznje bez ratinga koje je ovaj vozac prijavio
 		try
 		{
 			$db = DB::getConnection();
@@ -385,31 +398,55 @@ class UserService
 		{
 			exit( 'PDO error in class UserService function getReservations:  ' . $e->getMessage() );
 		}
+
+		$poljeIzbrisanih = array();
 		$poljeRezerviranih = array();
 		$poljeBezKomentara = array();
+
 		foreach( $st->fetchAll() as $row ) {
-			try
-			{
-				$db = DB::getConnection();
-				$st1 = $db->prepare('SELECT driver_id, start_place, end_place, date, start_time, end_time, price FROM drive WHERE drive_id LIKE :id');
-				$st1->execute( array('id' => $row['drive_id']) );
+			if ( in_array($row['drive_id'], $izbrisaniElementi) ){
+				// izvuci podatke iz tablice izbrisanih
+				try
+				{
+					$db = DB::getConnection();
+					$st = $db->prepare('SELECT drive_id, driver_id, start_place, end_place, date, start_time, end_time, price FROM deleted_drive WHERE drive_id LIKE :id');
+					$st->execute( array('id' => $row['drive_id']) );
+				}
+				catch( PDOException $e )
+				{
+					exit( 'PDO error in class UserService function getReservations:  ' . $e->getMessage() );
+				}
+				$row2 = $st->fetch();
+				$username = UserService::getUsernameById($row2['driver_id']);
+				$voznja = array ($username, $row2['start_place'], $row2['end_place'], $row2['date'], $row2['start_time'], $row2['end_time'], $row2['price'], $row2['drive_id']);
+				$poljeIzbrisanih[] = $voznja;
 			}
-			catch( PDOException $e )
-			{
-				exit( 'PDO error in class UserService function getReservations:  ' . $e->getMessage() );
+			else{
+				try
+				{
+					$db = DB::getConnection();
+					$st1 = $db->prepare('SELECT drive_id, driver_id, start_place, end_place, date, start_time, end_time, price FROM drive WHERE drive_id LIKE :id');
+					$st1->execute( array('id' => $row['drive_id']) );
+				}
+				catch( PDOException $e )
+				{
+					exit( 'PDO error in class UserService function getReservations:  ' . $e->getMessage() );
+				}
+				$row1 = $st1->fetch();
+				$username = UserService::getUsernameById($row1['driver_id']);
+
+				$voznja = array ($username, $row1['start_place'], $row1['end_place'], $row1['date'], $row1['start_time'], $row1['end_time'], $row1['price'], $row1['drive_id']);
+				if ($trenutniDatum > $row1['date'] || ($trenutniDatum === $row1['date'] && $trenutnoVrijeme > $row1['vrijeme']))
+					$poljeBezKomentara[] = $voznja;
+				else
+					$poljeRezerviranih[] = $voznja;
 			}
-			$row1 = $st1->fetch();
-			$username = UserService::getUsernameById($row1['driver_id']);
-			$voznja = array ($username, $row1['start_place'], $row1['end_place'], $row1['date'], $row1['start_time'], $row1['end_time'], $row1['price']);
-			if ($trenutniDatum > $row1['date'] || ($trenutniDatum === $row1['date'] && $trenutnoVrijeme > $row1['vrijeme']))
-				$poljeBezKomentara[] = $voznja;
-			else
-				$poljeRezerviranih[] = $voznja;
 		}
-		$polje = array ($poljeRezerviranih, $poljeBezKomentara);
+		$polje = array ($poljeRezerviranih, $poljeBezKomentara, $poljeIzbrisanih);
 		return $polje;
 	}
 
+	// vraca nadolazece voznje
 	function getMyDrives($id) {
 		$trenutniDatum = date("Y-m-d");	// trenutni datum i vrijeme
 		$trenutnoVrijeme = date("H:i");
@@ -417,7 +454,6 @@ class UserService
 
 		try
 		{
-
 			$db = DB::getConnection();
 			$st = $db->prepare('SELECT drive_id, start_place, end_place, date, start_time, end_time, price FROM drive WHERE driver_id=:id
 					    AND date>:trendatum1
@@ -433,7 +469,7 @@ class UserService
 			try
 			{
 				$db = DB::getConnection();
-				$st1 = $db->prepare('SELECT user_id FROM ratings  WHERE drive_id LIKE :id');	// alt. upit-> grupna f-ja mysql
+				$st1 = $db->prepare('SELECT user_id FROM ratings  WHERE drive_id LIKE :id');	// alt. upit-> grupna f-ja mysql (count?)
 				$st1->execute( array('id' => $row['drive_id']) );
 			}
 			catch( PDOException $e )
@@ -444,12 +480,115 @@ class UserService
 			foreach($st1->fetchAll() as $row1)
 				++$broj;
 
-			$voznja = array ($row['start_place'], $row['end_place'], $row['date'], $row['start_time'], $row['end_time'], $row['price'], $broj);
+			$voznja = array ($row['start_place'], $row['end_place'], $row['date'], $row['start_time'], $row['end_time'], $row['price'], $broj, $row['drive_id']);
 			$poljeVoznji[] = $voznja;
 		}
 
 		return $poljeVoznji;
 	}
 
+	function deleteReservation($id_voznje) {
+		$id = UserService::getIdByUsername($_SESSION['username']);
+		try
+		{
+			$db = DB::getConnection();
+			$st = $db->prepare('DELETE FROM ratings WHERE drive_id LIKE :drive_id AND user_id LIKE :user_id');
+			$st->execute( array('drive_id' => $id_voznje, 'user_id' => $id) );
+		}
+		catch( PDOException $e )
+		{
+			exit( 'PDO error in class UserService function deleteReservation:  ' . $e->getMessage() );
+		}
+	}
+
+	function deleteDrive($id_voznje) {
+		// preseli voznju $id_voznje iz drive u deleted_drive
+
+		// izvadi voznju iz drive
+		try
+		{
+			$db = DB::getConnection();
+			$st = $db->prepare('SELECT start_place, end_place, date, start_time, end_time, price FROM drive WHERE drive_id LIKE :drive_id');
+			$st->execute( array('drive_id' => $id_voznje, ) );
+		}
+		catch( PDOException $e )
+		{
+			exit( 'PDO error in class UserService function deleteDrive:  ' . $e->getMessage() );
+		}
+		$row = $st->fetch();
+		$voznja = array ($row['start_place'], $row['end_place'], $row['date'], $row['start_time'], $row['end_time'], $row['price']);
+
+		//obrisi voznju u drive
+		try
+		{
+			$db = DB::getConnection();
+			$st = $db->prepare('DELETE FROM drive WHERE drive_id LIKE :drive_id');
+			$st->execute( array('drive_id' => $id_voznje) );
+		}
+		catch( PDOException $e )
+		{
+			exit( 'PDO error in class UserService function deleteDrive:  ' . $e->getMessage() );
+		}
+
+		// ubaci voznju u deleted_drive
+		try{
+			$st = $db->prepare( 'INSERT INTO deleted_drive (drive_id, driver_id, start_place, end_place, date, start_time, end_time, price)
+								 VALUES (:drive_id, :driver_id, :startp, :endp, :date, :startt, :endt, :price)' );
+			$st->execute( array( 'drive_id' => $id_voznje,
+								 'driver_id' => UserService::getIdByUsername($_SESSION['username']),
+								 'startp' => $voznja[0],
+								 'endp' => $voznja[1],
+								 'date' => $voznja[2],
+								 'startt' => $voznja[3],
+								 'endt' => $voznja[4],
+								 'price' => $voznja[5]) );
+		}
+		catch( PDOException $e )
+		{
+			exit( 'PDO error in class UserService function deleteDrive:  ' . $e->getMessage() );
+		}
+
+	}
+
+	function deleteRating($id_voznje) {
+		// izbrisi redak iz ratingsa
+		$id = UserService::getIdByUsername($_SESSION['username']);
+		try
+		{
+			$db = DB::getConnection();
+			$st = $db->prepare('DELETE FROM ratings WHERE drive_id LIKE :drive_id AND user_id LIKE :user_id');
+			$st->execute( array('drive_id' => $id_voznje, 'user_id' => $id) );
+		}
+		catch( PDOException $e )
+		{
+			exit( 'PDO error in class UserService function deleteRating:  ' . $e->getMessage() );
+		}
+
+		// + ako nema vise te voznje u ratingsima, izbrisi iz deleted
+		try
+		{
+			$db = DB::getConnection();
+			$st = $db->prepare('SELECT drive_id FROM ratings WHERE drive_id LIKE :drive_id');
+			$st->execute( array('drive_id' => $id_voznje) );
+		}
+		catch( PDOException $e )
+		{
+			exit( 'PDO error in class UserService function deleteRating:  ' . $e->getMessage() );
+		}
+		$row = $st->fetch();
+		if ( $row === false ) {
+			try
+			{
+				$db = DB::getConnection();
+				$st = $db->prepare('DELETE FROM deleted_drive WHERE drive_id LIKE :drive_id');
+				$st->execute( array('drive_id' => $id_voznje) );
+			}
+			catch( PDOException $e )
+			{
+				exit( 'PDO error in class UserService function deleteRating:  ' . $e->getMessage() );
+			}
+
+		}
+	}
 };
 ?>
