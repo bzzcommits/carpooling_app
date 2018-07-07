@@ -98,7 +98,7 @@ require_once __SITE_PATH . '/view/_header.php';
                     <div class="card card-register mx-auto mt-5">
                     <div class="card-header">HISTORY OF DRIVES</div>
                     <div class="card-body">
-             <?php  for ($i = 0; $i < count($poljeMojihVoznji); ++$i) {
+             <?php  for ($i = 0; $i < count($poljeProslihVoznji); ++$i) {
                             echo '<div class="form-group">';
                             echo "From " . $poljeProslihVoznji[$i][0] . "   to " . $poljeProslihVoznji[$i][1]. "  on: " . $poljeProslihVoznji[$i][2]
                             . "  at: " . $poljeProslihVoznji[$i][3] . " till: " . $poljeProslihVoznji[$i][4] . "  costs: " . $poljeProslihVoznji[$i][5];
