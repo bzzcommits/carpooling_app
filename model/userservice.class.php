@@ -214,12 +214,11 @@ class UserService
 			return true;
 	}
 
-
 	function getCarInfo ( $id ) {
   		try
   		{
   			$db = DB::getConnection();
-  			$st = $db->prepare('SELECT car_type, car_model, rating FROM drivers WHERE driver_id LIKE :id');
+  			$st = $db->prepare('SELECT car_type, car_model, rating, grade_number FROM drivers WHERE driver_id LIKE :id');
   			$st->execute( array('id' => $id) );
   		}
   		catch( PDOException $e )
@@ -228,7 +227,13 @@ class UserService
   		}
 
   		$row = $st->fetch();
-  		$car = new Car($row['car_type'], $row['car_model'], $row['rating']);
+		if ( (int) $row['grade_number'] === 0)
+			$rating = 0;
+		else
+			$rating = (int)$row['rating'] / ( (int)$row['grade_number'] );
+
+		$car = array($row['car_type'], $row['car_model'], $rating);
+  		//$car = new Car($row['car_type'], $row['car_model'], $row['rating']);
   		return $car;
   	}
 
@@ -272,7 +277,7 @@ class UserService
 		try
 		{
 			$db = DB::getConnection();
-			$st = $db->prepare('SELECT rating FROM drivers WHERE driver_id LIKE :id');
+			$st = $db->prepare('SELECT rating, grade_number FROM drivers WHERE driver_id LIKE :id');
 			$st->execute( array('id' => $id) );
 		}
 		catch( PDOException $e )
@@ -280,7 +285,8 @@ class UserService
 			exit( 'PDO error in class UserService function getCarModel:  ' . $e->getMessage() );
 		}
 		$row = $st->fetch();
-		$rating = $row['rating'];
+		$rating = (int)$row['rating']; $grade_number = (int)$row['grade_number'];
+		$rating = $rating / $grade_number;
 		return $rating;
 	}
 
@@ -348,6 +354,7 @@ class UserService
 		$imageName = $row['image'];
 		return $imageName;
 	}
+
 
 	function getComments($id) {
 		// prvo nademo sve voznje ovog korisnika (koje su vec prosle)
@@ -521,6 +528,34 @@ class UserService
 		return $poljeVoznji;
 	}
 
+	function historyOfDrives ($id) {	// povijest voznji (koje su vec prosle)
+										// (ispisujemo i na osobnom profilu i na tudem)
+
+		$trenutniDatum = date("Y-m-d");	// trenutni datum i vrijeme
+		$trenutnoVrijeme = date("H:i");
+		$poljeVoznji = array();
+
+		try
+		{
+			$db = DB::getConnection();
+			$st = $db->prepare('SELECT drive_id, start_place, end_place, date, start_time, end_time, price FROM drive WHERE driver_id=:id
+					    AND date<:trendatum1
+					    OR (date=:trendatum2 AND start_time<:trenvrijeme)');
+			$st->execute( array('id' => $id, 'trendatum1' => $trenutniDatum, 'trendatum2' => $trenutniDatum, 'trenvrijeme' => $trenutnoVrijeme) );
+		}
+		catch( PDOException $e )
+		{
+			exit( 'PDO error in class UserService function getMyDrives:  ' . $e->getMessage() );
+		}
+		foreach($st->fetchAll() as $row) {
+			$voznja = array ($row['start_place'], $row['end_place'], $row['date'], $row['start_time'], $row['end_time'], $row['price']);
+			$poljeVoznji[] = $voznja;
+		}
+
+		return $poljeVoznji;
+
+	}
+
 	function deleteReservation($id_voznje) {
 		$id = UserService::getIdByUsername($_SESSION['username']);
 		try
@@ -566,6 +601,7 @@ class UserService
 
 		// ubaci voznju u deleted_drive
 		try{
+			$db = DB::getConnection();
 			$st = $db->prepare( 'INSERT INTO deleted_drive (drive_id, driver_id, start_place, end_place, date, start_time, end_time, price)
 								 VALUES (:drive_id, :driver_id, :startp, :endp, :date, :startt, :endt, :price)' );
 			$st->execute( array( 'drive_id' => $id_voznje,
@@ -624,5 +660,125 @@ class UserService
 
 		}
 	}
+
+	function insertComment($id_voznje, $ocjena, $komentar) {
+		$id = UserService::getIdByUsername($_SESSION['username']);
+		try
+		{
+			$db = DB::getConnection();
+			$st = $db->prepare('UPDATE ratings SET comment=:comment, rating=:rating WHERE drive_id=:drive_id AND user_id=:user_id');
+			$st->execute( array('comment' => $komentar, 'rating' => $ocjena, 'drive_id' => $id_voznje, 'user_id' => $id ) );
+		}
+		catch( PDOException $e )
+		{
+			exit( 'PDO error in class UserService function insertComment (1):  ' . $e->getMessage() );
+		}
+
+		//moramo jos povecati ocjenu kod vozaca te voznje
+		// prvo nademo njegov id
+		try
+		{
+			$db = DB::getConnection();
+			$st = $db->prepare('SELECT driver_id FROM drive WHERE drive_id LIKE :drive_id');
+			$st->execute( array('drive_id' => $id_voznje ) );
+		}
+		catch( PDOException $e )
+		{
+			exit( 'PDO error in class UserService function insertComment (2):  ' . $e->getMessage() );
+		}
+		$row = $st->fetch();
+		$id_vozaca = $row['driver_id'];
+
+		// nademo njegovu ocjenu i broj komentara
+		try
+		{
+			$db = DB::getConnection();
+			$st = $db->prepare('SELECT rating, grade_number FROM drivers WHERE driver_id LIKE :driver_id');
+			$st->execute( array('driver_id' => $id_vozaca ) );
+		}
+		catch( PDOException $e )
+		{
+			exit( 'PDO error in class UserService function insertComment (3):  ' . $e->getMessage() );
+		}
+		$row = $st->fetch();
+		$ukupan_rating = (int)$row['rating']; $broj_ocjena = (int)$row['grade_number'];
+		$ukupan_rating += (int)$ocjena;
+		$broj_ocjena += 1;
+
+		//updateamo taj redak s novim podacima
+		try
+		{
+			$db = DB::getConnection();
+			$st = $db->prepare('UPDATE drivers SET rating=:rating, grade_number=:grade_number WHERE driver_id=:driver_id');
+			$st->execute( array('rating' => $ukupan_rating, 'grade_number' => $broj_ocjena, 'driver_id' => $id_vozaca) );
+		}
+		catch( PDOException $e )
+		{
+			exit( 'PDO error in class UserService function insertComment (4):  ' . $e->getMessage() );
+		}
+
+	}
+
+	function newDriver($car_type, $car_model) {
+		try{
+			$db = DB::getConnection();
+			$st = $db->prepare( 'INSERT INTO drivers (driver_id, car_type, car_model, rating, grade_number)
+								 VALUES (:driver_id, :car_type, :car_model, :rating, :grade_number)' );
+			$st->execute( array( 'driver_id' => UserService::getIdByUsername($_SESSION['username']),
+								 'car_type' => $car_type,
+							  	 'car_model' => $car_model,
+							 	 'rating' => 0,
+							 	 'grade_number' => 0) );
+		}
+		catch( PDOException $e )
+		{
+			exit( 'PDO error in class UserService function newDriver:  ' . $e->getMessage() );
+		}
+	}
+
+	function getFollowers($id) { // korisnici koji prate ovog korisnika
+		// treba naci sve iz prvog stupca, gdje je drugi stupac ovaj korisnik
+		$polje = array();
+
+		try
+		{
+			$db = DB::getConnection();
+			$st = $db->prepare('SELECT id_user FROM following WHERE id_followed_user LIKE :id');
+			$st->execute( array('id' => $id) );
+		}
+		catch( PDOException $e )
+		{
+			exit( 'PDO error in class UserService function getFollowers:  ' . $e->getMessage() );
+		}
+		foreach($st->fetchAll() as $row) {
+			$ime = UserService::getUsernameById( $row['id_user'] );
+			$polje[] = $ime;
+		}
+
+		return $polje;
+	}
+
+	function getFollowing($id) {	// korisnici koje ovaj korisnik prati
+		// treba naci sve iz drugog stupca, gdje je prvi stupac ovaj korisnik
+		$polje = array();
+
+		try
+		{
+			$db = DB::getConnection();
+			$st = $db->prepare('SELECT id_followed_user FROM following WHERE id_user LIKE :id');
+			$st->execute( array('id' => $id) );
+		}
+		catch( PDOException $e )
+		{
+			exit( 'PDO error in class UserService function getFollowing:  ' . $e->getMessage() );
+		}
+		foreach($st->fetchAll() as $row) {
+			$ime = UserService::getUsernameById( $row['id_followed_user'] );
+			$polje[] = $ime;
+		}
+
+		return $polje;
+	}
+
 };
 ?>
