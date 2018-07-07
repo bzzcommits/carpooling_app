@@ -10,8 +10,8 @@ require_once __SITE_PATH . '/view/_header.php';
    Za ostale se ispisuju:
         + nadolazece voznje
                 - omogucen je gumb za otkaz rezervacije
-        - voznje koje jos nisu ocijenili
-                - treba dodati formu u koju upise ocjenu, komentar i gumb (TO JOS TREBA)
+        + voznje koje jos nisu ocijenili
+                - treba dodati formu u koju upise ocjenu, komentar i gumb
         + poruke koje javljaju o otkazivanju rezervirane voznje
                 - dodati gumb koji se klikne nakon sto korisnik procita*/
 ?>
@@ -21,24 +21,22 @@ require_once __SITE_PATH . '/view/_header.php';
 </head>
 
 <body class="fixed-nav sticky-footer bg-dark" id="page-top">
-  <?php
-  require_once __SITE_PATH . '/view/menu.php';
-  require_once __SITE_PATH . '/view/menuForLogged.php';
-  require_once __SITE_PATH . '/view/menuTheRest.php';
-  ?>
+    <?php
+     require_once __SITE_PATH . '/view/menu.php';
+     require_once __SITE_PATH . '/view/menuForLogged.php';
+     require_once __SITE_PATH . '/view/menuTheRest.php';
+     ?>
 
   <div class="content-wrapper">
-
-	<!-- OVDJE IDE SLIKA-->
 
 	<div class="card card-register mx-auto mt-5">
 	<div class="card-header">Profile</div>
         <div class="card-body">
-          <form method="post" action="<?php echo __SITE_URL; ?>/index.php?rt=user/changeUserInfo">
-            <div class="form-group">
-              <img id="jej" src="user_images/<?php echo $user->image !== "" ? $user->username . "/" . $user->image : "avatar.png" ?>" alt="Something went wrong.">
-            </div>
-        		<div class="form-group">
+                <form method="post" action="<?php echo __SITE_URL; ?>/index.php?rt=user/changeUserInfo">
+                <div class="form-group">
+                  <img id="jej" src="user_images/<?php echo $user->image !== "" ? $user->username . "/" . $user->image : "avatar.png" ?>" alt="Something went wrong.">
+                </div>
+                <div class="form-group">
         			USERNAME: <?php  echo $user->username; ?>
         		</div>
 
@@ -53,24 +51,30 @@ require_once __SITE_PATH . '/view/_header.php';
         		<div class="form-group">
         			E-MAIL:	<?php echo $user->mail; ?>
         		</div>
-
                         <?php
                         // Ako je korisnik vozac, ispisujemo jos podataka.
                         if ( $driver === true ) { ?>
                     		<div class="form-group">
-                    			CAR TYPE: <?php  echo $car->car_type; ?>
+                    			CAR TYPE: <?php  echo $car[0]; ?>
                     		</div>
 
                     		<div class="form-group">
-                    			CAR MODEL: <?php  echo $car->car_model; ?>
+                    			CAR MODEL: <?php  echo $car[1]; ?>
                     		</div>
 
                     		<div class="form-group">
-                    			RATINGS: <?php echo $car->rating; ?>
+                    			RATINGS: <?php if ($car[2] === 0 ) echo 'no ratings yet'; else echo $car[2]; ?>
                     		</div>
                     <?php } ?>
         		<button type="submit" name="changeUserInfo" class="btn btn-primary btn-block">Change Profile Info!</button>
                 </form>
+                <?php
+                    if($driver === false) {?>
+                        <form method="post" action="<?php echo __SITE_URL; ?>/index.php?rt=user/becomeADriver">
+                        <button type="submit" name="becomeADriver" class="btn btn-primary btn-block">Become a Driver!</button>
+                        </form>
+                <?php }
+                ?>
         </div>
 	</div>
 
@@ -84,6 +88,36 @@ require_once __SITE_PATH . '/view/_header.php';
                  echo '</div>';
                 //unset($errorMsgs);
         }
+
+
+        // ispisujemo korisnike koje ovaj korisnik prati
+        if ( count($poljePracenih) > 0) {?>
+                <div class="card card-register mx-auto mt-5">
+                <div class="card-header">YOU ARE FOLLOWING THESE USERS</div>
+                <div class="card-body">
+                <div class="form-group">
+        <?php  for ($i = 0; $i < count($poljePracenih); ++$i) {
+                echo $poljePracenih[$i];
+                if ($i !== count($poljePracenih) - 1 )
+                    echo ", ";
+           }
+          echo "</div></div></div>";
+        }
+
+        // ispisujemo korisnike koji prate ovog korisnika
+        if ( count($poljePratitelja) > 0) {?>
+                <div class="card card-register mx-auto mt-5">
+                <div class="card-header">THESE USERS ARE FOLLOWING YOU</div>
+                <div class="card-body">
+                <div class="form-group">
+        <?php  for ($i = 0; $i < count($poljePratitelja); ++$i) {
+                echo $poljePratitelja[$i];
+                if ($i !== count($poljePratitelja) - 1 )
+                    echo ", ";
+           }
+          echo "</div></div></div>";
+        }
+
 
         // ispisujemo komentare i ocjene
         if ($driver === true) { ?>
@@ -113,9 +147,23 @@ require_once __SITE_PATH . '/view/_header.php';
             echo "</div></div>";
           }
 
+          // ispisujemo prosle voznje
+          if ( count($poljeProslihVoznji) > 0) {?>
+                  <div class="card card-register mx-auto mt-5">
+                  <div class="card-header">YOUR PAST DRIVES</div>
+                  <div class="card-body">
+          <?php  for ($i = 0; $i < count($poljeMojihVoznji); ++$i) {
+                  echo '<div class="form-group">';
+                  echo "From " . $poljeProslihVoznji[$i][0] . "   to " . $poljeProslihVoznji[$i][1]. "  on: " . $poljeProslihVoznji[$i][2]
+                  . "  at: " . $poljeProslihVoznji[$i][3] . " till: " . $poljeProslihVoznji[$i][4] . "  costs: " . $poljeProslihVoznji[$i][5];
+                  echo '</div>';
+             }
+            echo "</div></div>";
+          }
+
         }
 
-
+        // poljeRez se sastoji od tri array-a
         $poljeRezerv = $poljeRez[0];
         $poljeBezKom = $poljeRez[1];
         $poljeIzbris = $poljeRez[2];
@@ -144,17 +192,15 @@ require_once __SITE_PATH . '/view/_header.php';
                 <div class="card-body">
 
         <?php   for ($i = 0; $i < count($poljeBezKom); ++$i) {
-                    echo '<form method="post" action="<?php echo __SITE_URL; ?>/index.php?rt=user/unesenKomentar">';
-                        echo '<div class="form-group">';
-                        echo 'Driver: ' . $poljeBezKom[$i][0] . ", from " . $poljeBezKom[$i][1] . "   to: " . $poljeBezKom[$i][2]
-                        . "  on: " . $poljeBezKom[$i][3] . "  at: " . $poljeBezKom[$i][4] . " costs: " . $poljeBezKom[$i][6];
+                    echo '<div class="form-group">';
+                    echo 'Driver: ' . $poljeBezKom[$i][0] . ", from " . $poljeBezKom[$i][1] . "   to: " . $poljeBezKom[$i][2]
+                    . "  on: " . $poljeBezKom[$i][3] . "  at: " . $poljeBezKom[$i][4] . " costs: " . $poljeBezKom[$i][6];
 
-                        echo '<input class="form-control" class="unesiOcjenu" placeholder="Enter grade" type="text" name="'.$poljeBezKom[$i][7] .'" />';
-                        echo '<input class="form-control" class="unesiKomentar" placeholder="Enter comment" type="text" name="'.$poljeBezKom[$i][7] .'" />';
+                    echo '<input class="form-control" id="ocjena" placeholder="Enter grade" type="text" />';
+                    echo '<input class="form-control" id="komentar" placeholder="Enter comment" type="text" />';
 
-                        echo ' <button class= "ocjenjenaVoznja" name="' . $poljeBezKom[$i][7] . '" >Grade this drive!</button>';
-                        echo '</div>';
-                    echo '</form>';
+                    echo ' <button class="ocjenjenaVoznja" name="'. $poljeBezKom[$i][7] .'">Grade this drive!</button>';
+                    echo '</div>';
                }
               echo "</div></div>";
 
@@ -184,6 +230,7 @@ $(document).ready( function()
     $( "body" ).on( "click", "button.otkaziRezervaciju", otkaziRezervaciju );
     $( "body" ).on( "click", "button.otkaziVoznju", otkaziVoznju );
     $( "body" ).on( "click", "button.procitanaPoruka", procitanaPoruka );
+    $( "body" ).on( "click", "button.ocjenjenaVoznja", ocjenjenaVoznja );
 });
 function otkaziRezervaciju(event) {
     var ret = confirm("Are you sure you want to delete this reservation?");
@@ -247,6 +294,31 @@ function procitanaPoruka(event) {
     );
 
 }
+
+function ocjenjenaVoznja(event) {
+    var gumb = $(this);
+    var ime = gumb.prop("name");
+    var ocjena = Number ( $("#ocjena").val() );
+    var komentar = $("#komentar").val();
+    if ( ocjena < 1 || ocjena > 5 )
+        alert("The grade has to be between 1 and 5");
+    else {
+        $.ajax(
+            {
+                url: window.location.pathname + "?rt=user/unesenKomentar",
+                data: { idVoznje: ime, ocjena: ocjena, komentar: komentar},
+                type: 'POST',
+        		dataType: "json",
+    			success: function( data )
+    			{
+                    window.location.reload(false);
+                    // console.log("uspjesno unesen komentar");
+    			}
+            }
+        );
+    }
+}
+
 </script>
 
     <!-- /.container-fluid-->
@@ -254,7 +326,7 @@ function procitanaPoruka(event) {
     <footer class="sticky-footer">
       <div class="container">
         <div class="text-center">
-          <small>Copyright � 2018</small>
+          <small>Copyright © 2018</small>
         </div>
       </div>
     </footer>
