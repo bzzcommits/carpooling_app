@@ -20,7 +20,7 @@ class AuthenticationService{
     if( $row['has_registered'] !== '1' )
       return -2;
 
-    $user = new User( $row['id'], $row['username'], $row['year'], $row['telephone'], $row['mail'] );
+    $user = new User( $row['id'], $row['username'], $row['year'], $row['telephone'], $row['mail'], $row['image'] );
     return $user;
   }
 

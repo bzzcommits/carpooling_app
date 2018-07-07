@@ -8,7 +8,7 @@ class UserService
 		try
 		{
 			$db = DB::getConnection();
-			$st = $db->prepare('SELECT id, year, telephone, mail FROM users WHERE username LIKE :username');
+			$st = $db->prepare('SELECT id, year, telephone, mail, image FROM users WHERE username LIKE :username');
 			$st->execute( array('username' => $username) );
 		}
 		catch( PDOException $e )
@@ -17,7 +17,7 @@ class UserService
 		}
 
 		$row = $st->fetch();
-		$info = new User($row['id'], $username, $row['year'], $row['telephone'],  $row['mail']);
+		$info = new User($row['id'], $username, $row['year'], $row['telephone'],  $row['mail'], $row['image']);
 		return $info;
 	}
 
@@ -313,6 +313,40 @@ class UserService
 			//exit( 'PDO error in class UserService function changeCarModel:  ' . $e->getMessage() );
 		}
 		return true;
+	}
+
+	function changeImage($username, $image) {
+		try
+		{
+			$db = DB::getConnection();
+			$st = $db->prepare('UPDATE users SET image=:image WHERE username=:username');
+			$st->execute( array('image'=>$image, 'username' => $username) );
+		}
+		catch( PDOException $e )
+		{
+			return false;
+			//exit( 'PDO error in class UserService function changeImage:  ' . $e->getMessage() );
+		}
+		return true;
+	}
+
+	function deleteImage($username){
+		try
+		{
+			$db = DB::getConnection();
+			$st1 = $db->prepare('SELECT image FROM users WHERE username=:username');
+			$st2 = $db->prepare('UPDATE users SET image="" WHERE username=:username');
+			$st1->execute( array('username' => $username) );
+			$st2->execute( array('username' => $username) );
+		}
+		catch( PDOException $e )
+		{
+			return false;
+			exit( 'PDO error in class UserService function deleteImage:  ' . $e->getMessage() );
+		}
+		$row = $st1->fetch();
+		$imageName = $row['image'];
+		return $imageName;
 	}
 
 	function getComments($id) {

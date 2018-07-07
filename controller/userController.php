@@ -79,7 +79,102 @@ class userController extends BaseController
 	}
 
 
+			// Ovdje se mijenjaju dimenzije slike na zadane dimenzije.
+			public function resizeImage($sourceImage,$sourceImageWidth,$sourceImageHeight) {
+				$resizeWidth = 220; $resizeHeight = 250;
+				$destinationImage = imagecreatetruecolor($resizeWidth,$resizeHeight);
+				imagecopyresampled($destinationImage,$sourceImage,0,0,0,0,$resizeWidth,$resizeHeight,$sourceImageWidth,$sourceImageHeight);
+				// Ovo ispod mijenja boju pozadine slike u bijelu, ali ostaje crni obrub oko slike nakon toga pa ipak ne koristim.
+				// $white = imagecolorallocate($destinationImage, 255, 255, 255);
+				// imagefill($destinationImage, 0, 0, $white);
+				return $destinationImage;
+			}
 
+			public function updateImage() {
+					$us = new UserService;
+
+					if(isset($_POST["uploadNew"])) {
+						$target_dir = "user_images/" . $_SESSION['username'];
+						if (!file_exists($target_dir )){
+				    	mkdir($target_dir, 0777, true);
+						}
+						//print_r($_FILES);
+						$target_file = $target_dir . "/" . basename($_FILES["imageToUpload"]["name"]);
+						$imageFileType = strtolower(pathinfo($target_file,PATHINFO_EXTENSION));
+
+						$errorMsg = array();
+						$uploadOk = 0;
+						$image = $_FILES["imageToUpload"]["tmp_name"];
+						$imageProperties = getimagesize($image);
+				    if($imageProperties === false)
+				      $errorMsg = "Sorry, file is not an image.";
+
+						// Postoji li slika s istim imenom na RP2 serveru?
+						else if (file_exists($target_file))
+							$errorMsg = "Sorry, file already exists.";
+
+						// Provjeri veličinu.
+						else if ($_FILES["imageToUpload"]["size"] > 1000000)
+							$errorMsg = "Sorry, your file is too large.";
+
+						// Dozvoli ove formate slike.
+						else if( $imageFileType != "jpg" && $imageFileType != "png" && $imageFileType != "jpeg" && $imageFileType != "gif" )
+							$errorMsg = "Sorry, only JPG, JPEG, PNG & GIF files are allowed." . $imageFileType;
+						else
+							$uploadOk = 1;
+
+						// Resizeanje slike.
+						if ($uploadOk === 1) {
+							$sourceImageWidth = $imageProperties[0];
+							$sourceImageHeight = $imageProperties[1];
+
+							// move_uploaded_file($imageLayer, $target_file); <-> imagejpeg($imageLayer,$target_file);
+							switch ($imageFileType){
+								case "jpg":
+								 $image = imagecreatefromjpeg($image);
+								 $image = $this->resizeImage($image,$sourceImageWidth,$sourceImageHeight);
+								 imagejpeg($image,$target_file);
+								 break;
+								case "jpeg":
+								 $image = imagecreatefromjpeg($image);
+								 $image = $this->resizeImage($image,$sourceImageWidth,$sourceImageHeight);
+								 imagejpeg($image,$target_file);
+								 break;
+								case "gif":
+								 $image = imagecreatefromgif($image);
+								 $image = $this->resizeImage($image,$sourceImageWidth,$sourceImageHeight);
+								 imagegif($image,$target_file);
+								 break;
+								case "png":
+								 $image = imagecreatefrompng($image);
+								 $image = $this->resizeImage($resourceType,$sourceImageWidth,$sourceImageHeight);
+								 imagepng($image,$target_file);
+								 break;
+							}
+
+							$imagename = basename( $_FILES["imageToUpload"]["name"]);
+							if ( $us->changeImage( $_SESSION['username'], $imagename ) === false )
+								$this->registry->template->errorMsgs = "Error while updating image name.";
+							else
+								userController::index();
+						}
+						else{
+							$this->registry->template->errorMsgs = $errorMsg;
+							//echo "</br>" . $errorMsg;
+						}
+				}
+				else if (isset($_POST["deleteImage"])){
+					$imageName = $us->deleteImage( $_SESSION['username'] );
+					if ($imageName  === false ) {
+						$this->registry->template->errorMsgs = "Error while deleting image name.";
+						//echo "</br>" . $errorMsg;
+					}
+					else{
+						unlink("user_images/" . $_SESSION['username'] . "/" . $imageName);
+						userController::index();
+					}
+				}
+			}
 
 
 

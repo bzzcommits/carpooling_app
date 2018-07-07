@@ -32,7 +32,10 @@ require_once __SITE_PATH . '/view/menu.php';
 	<div class="card card-register mx-auto mt-5">
 	<div class="card-header">Profile</div>
         <div class="card-body">
-                <form method="post" action="<?php echo __SITE_URL; ?>/index.php?rt=user/changeUserInfo">
+          <form method="post" action="<?php echo __SITE_URL; ?>/index.php?rt=user/changeUserInfo">
+            <div class="form-group">
+              <img id="jej" src="user_images/<?php echo $user->image !== "" ? $user->username . "/" . $user->image : "avatar.png" ?>" alt="Something went wrong.">
+            </div>
         		<div class="form-group">
         			USERNAME: <?php  echo $user->username; ?>
         		</div>
@@ -249,7 +252,7 @@ function procitanaPoruka(event) {
     <footer class="sticky-footer">
       <div class="container">
         <div class="text-center">
-          <small>Copyright © 2018</small>
+          <small>Copyright ï¿½ 2018</small>
         </div>
       </div>
     </footer>

@@ -54,6 +54,20 @@ require_once __SITE_PATH . '/view/menu.php';
 			<button type="submit" name="dropChange" class="btn btn-primary btn-block">Drop changes!</button>
 		</form>
 	</div>
+
+  <!-- Odvojena forma za uploadanje slike jer se treba koristiti drugačiji enctype kad se šalju datoteke, a ne onaj defaultni. -->
+  <div class="card-header">Profile image</div>
+    <div class="card-body">
+    <form method="post" action="<?php echo __SITE_URL; ?>/index.php?rt=user/updateImage" enctype="multipart/form-data">
+      <div class="form-group">
+        <span class="btn btn-default btn-file">
+          <input type="file" id="imageToUpload" name="imageToUpload">
+        </span>
+      </div>
+      <button type="submit" name="uploadNew" class="btn btn-primary btn-block">Upload new image!</button>
+      <button type="submit" name="deleteImage" class="btn btn-primary btn-block">Delete current image!</button>
+    </form></br></br>
+	</div>
 	</div>
 
 
