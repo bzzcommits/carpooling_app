@@ -6,9 +6,11 @@ require_once __SITE_PATH . '/view/_header.php';
 </head>
 
 <body class="fixed-nav sticky-footer bg-dark" id="page-top">
-<?php
-require_once __SITE_PATH . '/view/menu.php';
-?>
+  <?php
+  require_once __SITE_PATH . '/view/menu.php';
+  if(isset($_SESSION['user_id'])) require_once __SITE_PATH . '/view/menuForLogged.php';
+  require_once __SITE_PATH . '/view/menuTheRest.php';
+  ?>
 
   <div class="content-wrapper">
 	<div class="card card-register mx-auto mt-5">
