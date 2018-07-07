@@ -7,6 +7,11 @@ class PretraziController extends BaseController
 		$this->registry->template->show( 'drive_index' );
 	}
 
+	public function offers()
+	{
+		$this->registry->template->show( 'drive_offer' );
+	}
+
 	public function searchResults()
 	{
 		$ls = new CarService();

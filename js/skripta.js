@@ -21,6 +21,7 @@ function handleLogout(){
         $(this).attr('href', window.location.href);
 }
 
+
 $(document).ready(
     function() {
         // klik na logout
@@ -30,5 +31,12 @@ $(document).ready(
         $("#cnf").on("input", handlePasswords);
         $("#psw").on("input", handlePasswords);
 
+        // U kartici Drive, odi na stranicu ovisno o buttonu...
+        $("#search_drive").on("click", function(){
+          window.location.href = window.location.pathname+"?rt=pretrazi";
+        });
+        $("#offer_drive").on("click", function(){
+          window.location.href = window.location.pathname+"?rt=pretrazi/offers";
+        });
     }
 );
