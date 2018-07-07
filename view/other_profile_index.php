@@ -35,12 +35,14 @@ require_once __SITE_PATH . '/view/_header.php';
 
   <div class="content-wrapper">
 
-	<!-- OVDJE IDE SLIKA-->
     <!-- TREBA DODATI GUMB ZA FOLLOW (treba i u controller dodati funkciju koja ubacuje pratitelje) -->
 
 	<div class="card card-register mx-auto mt-5">
 	<div class="card-header">Profile</div>
-            <div class="card-body">
+          <div class="card-body">
+            <div class="form-group">
+              <img id="jej" src="user_images/<?php echo $user->image !== "" ? $user->username . "/" . $user->image : "avatar.png" ?>" alt="Something went wrong.">
+            </div>
         		<div class="form-group">
         			USERNAME: <?php  echo $user->username; ?>
         		</div>
