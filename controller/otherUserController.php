@@ -17,7 +17,7 @@ class otherUserController extends BaseController
 	public function index()
 	{
 
-		// $username = $_GET[<!-- iz query stringa iscitamo username -->];
+		$username = $_GET['name'];
 
 		$us = new UserService;
 		$user_id =$us->getIdByUsername($username);
@@ -26,6 +26,8 @@ class otherUserController extends BaseController
 			$this->registry->template->driver = true;
 			$this->registry->template->car = $us->getCarInfo($user_id);
 			$this->registry->template->poljeKomentara = $us->getComments($user_id);
+			$this->registry->template->poljeProslihVoznji = $us->historyOfDrives($user_id);
+			$this->registry->template->poljeMojihVoznji = $us->getMyDrives($user_id);
 		}
 		else
 			$this->registry->template->driver = false;

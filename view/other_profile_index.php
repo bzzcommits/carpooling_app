@@ -85,9 +85,11 @@ require_once __SITE_PATH . '/view/_header.php';
 
              <?php  for ($i = 0; $i < count($poljeKomentara); ++$i) {
                         echo '<div class="form-group">';
-                        echo "user: " . $poljeKomentara[$i][0] . ",      rating: " . $poljeKomentara[$i][2] . ",      comment: " . $poljeKomentara[$i][1];
+                        echo "user: " . '<a href="' . __SITE_URL . '/index.php?rt=otherUser&name=' . $poljeKomentara[$i][0] . '">' . $poljeKomentara[$i][0] . '</a>'
+                         . ",      rating: " . $poljeKomentara[$i][2] . ",      comment: " . $poljeKomentara[$i][1];
                         echo '</div>';
                     }
+                    echo "</div></div>";
                 }
                 //ispisujemo prosle voznje
                 if ( count($poljeProslihVoznji) > 0 ) {?>
@@ -110,7 +112,7 @@ require_once __SITE_PATH . '/view/_header.php';
     <footer class="sticky-footer">
       <div class="container">
         <div class="text-center">
-          <small>Copyright © 2018</small>
+          <small>Copyright ï¿½ 2018</small>
         </div>
       </div>
     </footer>

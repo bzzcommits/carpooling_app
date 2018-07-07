@@ -89,7 +89,6 @@ require_once __SITE_PATH . '/view/_header.php';
                 //unset($errorMsgs);
         }
 
-
         // ispisujemo korisnike koje ovaj korisnik prati
         if ( count($poljePracenih) > 0) {?>
                 <div class="card card-register mx-auto mt-5">
@@ -97,7 +96,7 @@ require_once __SITE_PATH . '/view/_header.php';
                 <div class="card-body">
                 <div class="form-group">
         <?php  for ($i = 0; $i < count($poljePracenih); ++$i) {
-                echo $poljePracenih[$i];
+                echo '<a href="' . __SITE_URL . '/index.php?rt=otherUser&name=' . $poljePracenih[$i] . '">' . $poljePracenih[$i] . '</a>';
                 if ($i !== count($poljePracenih) - 1 )
                     echo ", ";
            }
@@ -111,7 +110,7 @@ require_once __SITE_PATH . '/view/_header.php';
                 <div class="card-body">
                 <div class="form-group">
         <?php  for ($i = 0; $i < count($poljePratitelja); ++$i) {
-                echo $poljePratitelja[$i];
+                echo '<a href="' . __SITE_URL . '/index.php?rt=otherUser&name=' . $poljePracenih[$i] . '">' . $poljePracenih[$i] . '</a>';
                 if ($i !== count($poljePratitelja) - 1 )
                     echo ", ";
            }
@@ -127,7 +126,8 @@ require_once __SITE_PATH . '/view/_header.php';
 
         <?php   for ($i = 0; $i < count($poljeKomentara); ++$i) {
                         echo '<div class="form-group">';
-                        echo "user: " . $poljeKomentara[$i][0] . ",      rating: " . $poljeKomentara[$i][2] . ",      comment: " . $poljeKomentara[$i][1];
+                        echo "user: " . '<a href="' . __SITE_URL . '/index.php?rt=otherUser&name=' . $poljeKomentara[$i][0] . '">' . $poljeKomentara[$i][0] . '</a>'
+                         . ",      rating: " . $poljeKomentara[$i][2] . ",      comment: " . $poljeKomentara[$i][1];
                         echo '</div>';
            }
           echo "</div></div>";
