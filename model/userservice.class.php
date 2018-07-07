@@ -381,6 +381,7 @@ class UserService
 		$poljeKomentara = array();
 		for ($i = 0; $i < count($poljeId); ++$i) {
 			// nakon toga, za svaku voznju spremimo ocjenu+komentar+username -> vracamo to polje (objekata klase Comments iz user.class.php)
+			// 	-> vracamo samo za unesene ocjene
 			try
 			{
 				$db = DB::getConnection();
@@ -392,11 +393,13 @@ class UserService
 				exit( 'PDO error in class UserService function getComments:  ' . $e->getMessage() );
 			}
 			foreach( $st->fetchAll() as $row ){
-				$tempKom = array();
-				$tempKom[] = UserService::getUsernameById($row['user_id']);
-				$tempKom[] = $row['comment'];
-				$tempKom[] = $row['rating'];
-				$poljeKomentara[] = $tempKom;
+				if ( $row['rating'] !== "" ) {
+					$tempKom = array();
+					$tempKom[] = UserService::getUsernameById($row['user_id']);
+					$tempKom[] = $row['comment'];
+					$tempKom[] = $row['rating'];
+					$poljeKomentara[] = $tempKom;
+				}
 			}
 		}
 		return $poljeKomentara;
