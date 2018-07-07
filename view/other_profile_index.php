@@ -71,7 +71,7 @@ require_once __SITE_PATH . '/view/_header.php';
                     		</div>
 
                     		<div class="form-group">
-                    			RATINGS: <?php if ($car[2] === 0 ) echo 'no ratings yet'; else echo $car[2]; ?>
+                    			RATINGS: <?php if ($car[2] === 0 ) echo 'no ratings yet'; else echo number_format( (float) $car[2], 2, '.', ''); ?>
                     		</div>
                     <?php } ?>
             </div>
