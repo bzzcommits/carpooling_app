@@ -1,7 +1,14 @@
 <?php
 require_once __SITE_PATH . '/view/_header.php';
 
-/* Stranica koja sluzi za prikazivanje tudeg profila.
+/* NAPOMENA: ovo jos nisam testirala, buduci da se prvo mora omoguciti klikanje na ime (Anastasija)
+
+   TREBA:
+    - dodati sliku
+    - dodati gumb "Follow this user" (treba onda dodati i pripadne f-je u model i controller)
+
+
+   Stranica koja sluzi za prikazivanje tudeg profila.
    Korisnik moze doci na ovu stranicu samo ako klikne na neciji username.
    Tada se iz query-stringa procita username i na njemu se pozivaju funkcije u controlleru.
 
@@ -9,10 +16,7 @@ require_once __SITE_PATH . '/view/_header.php';
    Ako je korisnik vozac ispisuju se uz to i:
         - vrsta i model auta, ukupna ocjena
         - posebno ocjene + komentari
-
-   NAPOMENA:
-   -> Ako cemo omoguciti da od tudih profila mozemo vidjeti samo one od vozaca, onda se odmah ispisuju i
-      podaci o vozilu / komentari, pa ne treba raditi if($driver === true)
+        - povijest proslih voznji
    */
 
 
@@ -22,15 +26,17 @@ require_once __SITE_PATH . '/view/_header.php';
 </head>
 
 <body class="fixed-nav sticky-footer bg-dark" id="page-top">
-  <?php
-  require_once __SITE_PATH . '/view/menu.php';
-  require_once __SITE_PATH . '/view/menuForLogged.php';
-  require_once __SITE_PATH . '/view/menuTheRest.php';
-  ?>
+    <?php
+    require_once __SITE_PATH . '/view/menu.php';
+    require_once __SITE_PATH . '/view/menuForLogged.php';
+    require_once __SITE_PATH . '/view/menuTheRest.php';
+    ?>
+
 
   <div class="content-wrapper">
 
 	<!-- OVDJE IDE SLIKA-->
+    <!-- TREBA DODATI GUMB ZA FOLLOW (treba i u controller dodati funkciju koja ubacuje pratitelje) -->
 
 	<div class="card card-register mx-auto mt-5">
 	<div class="card-header">Profile</div>
@@ -55,32 +61,48 @@ require_once __SITE_PATH . '/view/_header.php';
                         // Ako je korisnik vozac, ispisujemo jos podataka.
                         if ( $driver === true ) { ?>
                     		<div class="form-group">
-                    			CAR TYPE: <?php  echo $car->car_type; ?>
+                    			CAR TYPE: <?php  echo $car[0]; ?>
                     		</div>
 
                     		<div class="form-group">
-                    			CAR MODEL: <?php  echo $car->car_model; ?>
+                    			CAR MODEL: <?php  echo $car[1]; ?>
                     		</div>
 
                     		<div class="form-group">
-                    			RATINGS: <?php echo $car->rating; ?>
+                    			RATINGS: <?php if ($car[2] === 0 ) echo 'no ratings yet'; else echo $car[2]; ?>
                     		</div>
                     <?php } ?>
             </div>
 	</div>
 
         <?php
-        // ispisujemo komentare i ocjene (ako je vozac)
-        if ($driver === true) { ?>
-                <div class="card card-register mx-auto mt-5">
-                <div class="card-header">COMMENTS ABOUT THIS USER</div>
-                <div class="card-body">
+        if ($driver === true) {
+                // ispisujemo komentare i ocjene
+                if ( count($poljeKomentara) > 0 ) {   ?>
+                    <div class="card card-register mx-auto mt-5">
+                    <div class="card-header">COMMENTS ABOUT THIS USER</div>
+                    <div class="card-body">
 
-        <?php   for ($i = 0; $i < count($poljeKomentara); ++$i) {
+             <?php  for ($i = 0; $i < count($poljeKomentara); ++$i) {
                         echo '<div class="form-group">';
                         echo "user: " . $poljeKomentara[$i][0] . ",      rating: " . $poljeKomentara[$i][2] . ",      comment: " . $poljeKomentara[$i][1];
                         echo '</div>';
-                {
+                    }
+                }
+                //ispisujemo prosle voznje
+                if ( count($poljeProslihVoznji) > 0 ) {?>
+                    <div class="card card-register mx-auto mt-5">
+                    <div class="card-header">HISTORY OF DRIVES</div>
+                    <div class="card-body">
+             <?php  for ($i = 0; $i < count($poljeMojihVoznji); ++$i) {
+                            echo '<div class="form-group">';
+                            echo "From " . $poljeProslihVoznji[$i][0] . "   to " . $poljeProslihVoznji[$i][1]. "  on: " . $poljeProslihVoznji[$i][2]
+                            . "  at: " . $poljeProslihVoznji[$i][3] . " till: " . $poljeProslihVoznji[$i][4] . "  costs: " . $poljeProslihVoznji[$i][5];
+                            echo '</div>';
+                       }
+                       echo "</div></div>";
+                }
+
         }?>
 
     <!-- /.container-fluid-->
@@ -88,7 +110,7 @@ require_once __SITE_PATH . '/view/_header.php';
     <footer class="sticky-footer">
       <div class="container">
         <div class="text-center">
-          <small>Copyright Â© 2018</small>
+          <small>Copyright © 2018</small>
         </div>
       </div>
     </footer>
