@@ -63,7 +63,7 @@ require_once __SITE_PATH . '/view/_header.php';
                     		</div>
 
                     		<div class="form-group">
-                    			RATINGS: <?php if ($car[2] === 0 ) echo 'no ratings yet'; else echo $car[2]; ?>
+                    			RATINGS: <?php if ($car[2] === 0 ) echo 'no ratings yet'; else echo number_format( (float) $car[2], 2, '.', ''); ?>
                     		</div>
                     <?php } ?>
         		<button type="submit" name="changeUserInfo" class="btn btn-primary btn-block">Change Profile Info!</button>
@@ -176,7 +176,8 @@ require_once __SITE_PATH . '/view/_header.php';
 
         <?php   for ($i = 0; $i < count($poljeRezerv); ++$i) {
                     echo '<div class="form-group">';
-                    echo 'Driver: ' . $poljeRezerv[$i][0] . ", from " . $poljeRezerv[$i][1] . "   to: " . $poljeRezerv[$i][2]
+                    echo 'Driver: <a href="' . __SITE_URL . '/index.php?rt=otherUser&name=' .  $poljeRezerv[$i][0] . '">' .  $poljeRezerv[$i][0] . '</a>';
+                    echo ", from " . $poljeRezerv[$i][1] . "   to: " . $poljeRezerv[$i][2]
                     . "  on: " . $poljeRezerv[$i][3] . "  at: " . $poljeRezerv[$i][4] . " costs: " . $poljeRezerv[$i][6];
                     // 7.element polja je drive_id. Pomocu njega i gumbda znamo koju voznju treba otkazati
                     $imeGumba = "otkaziRezervacijuBr_" . $poljeRezerv[$i][7]; // odvajamo s _ da mozemo explodat
@@ -193,7 +194,8 @@ require_once __SITE_PATH . '/view/_header.php';
 
         <?php   for ($i = 0; $i < count($poljeBezKom); ++$i) {
                     echo '<div class="form-group">';
-                    echo 'Driver: ' . $poljeBezKom[$i][0] . ", from " . $poljeBezKom[$i][1] . "   to: " . $poljeBezKom[$i][2]
+                    echo 'Driver: <a href="' . __SITE_URL . '/index.php?rt=otherUser&name=' .   $poljeBezKom[$i][0] . '">' .   $poljeBezKom[$i][0] . '</a>';
+                    echo ", from " . $poljeBezKom[$i][1] . "   to: " . $poljeBezKom[$i][2]
                     . "  on: " . $poljeBezKom[$i][3] . "  at: " . $poljeBezKom[$i][4] . " costs: " . $poljeBezKom[$i][6];
 
                     echo '<input class="form-control" id="ocjena" placeholder="Enter grade" type="text" />';
@@ -213,7 +215,8 @@ require_once __SITE_PATH . '/view/_header.php';
 
         <?php   for ($i = 0; $i < count($poljeIzbris); ++$i) {
                     echo '<div class="form-group">';
-                    echo 'Driver: ' . $poljeIzbris[$i][0] . ", from " . $poljeIzbris[$i][1] . "   to: " . $poljeIzbris[$i][2]
+                    echo 'Driver: <a href="' . __SITE_URL . '/index.php?rt=otherUser&name=' .   $poljeIzbris[$i][0] . '">' .    $poljeIzbris[$i][0] . '</a>';
+                    echo ", from " . $poljeIzbris[$i][1] . "   to: " . $poljeIzbris[$i][2]
                     . "  on: " . $poljeIzbris[$i][3] . "  at: " . $poljeIzbris[$i][4] . " costs: " . $poljeIzbris[$i][6];
                     echo ' <button class= "procitanaPoruka" name="' . $poljeIzbris[$i][7] . '" >Read the message</button>';
                     echo '</div>';
