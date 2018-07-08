@@ -5,6 +5,20 @@ if( isset( $_SESSION[ 'username' ] ) )
   ?>
   <ul class="navbar-nav ml-auto">        
         
+    <li class="nav-item">
+    <!-- promijeniti action page -->
+      <form class="form-inline my-2 my-lg-0 mr-lg-2" method="post" action="<?php echo __SITE_URL; ?>/index.php?rt=user/searchUser">
+        <div class="input-group">
+          <input class="form-control" type="text" placeholder="Search for user..." id="searchUserId">
+          <span class="input-group-append">
+            <button class="btn btn-primary" type="button" id="searchId">
+              <i class="fa fa-search"></i>
+            </button>
+          </span>
+        </div>
+      </form>
+    </li>    
+        
 	<li class="nav-item">
 	  <a id="lgout" class="nav-link" href="<?php echo __SITE_URL; ?>/index.php?rt=home/logout">
 		<i class="fa fa-fw fa-sign-out"></i> Logout </a>
