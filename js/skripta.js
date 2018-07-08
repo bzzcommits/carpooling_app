@@ -223,6 +223,12 @@ function ocjenjenaVoznja(event) {
     var komentar = $("#komentar").val();
     if ( ocjena < 1 || ocjena > 5 )
         alert("The grade has to be between 1 and 5");
+
+    var reg = /^([\w.,]|\s){2,100}$/;    // slova, znamenke, underscore, tocka, zarez
+
+    if ( reg.test(komentar) === false )
+        alert("The comment has to have between 2 and 100 characters (letters, numbers, spaces, dot or comma)");
+
     else {
         $.ajax(
             {

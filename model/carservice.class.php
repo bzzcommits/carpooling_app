@@ -11,7 +11,7 @@ class CarService
 
 				$db = DB::getConnection();
 				$st = $db->prepare( 'SELECT drive.driver_id, drive.start_place, drive.end_place, drive.`date`, drive.start_time,
-					drive.end_time, drive.price, drive.place_number, users.username, drivers.rating, drive.drive_id
+					drive.end_time, drive.price, drive.place_number, users.username, drive.drive_id
 					FROM drive, drivers, users
 					WHERE drive.driver_id=drivers.driver_id AND drive.driver_id=users.id AND drive.start_place=:start_place AND drive.end_place=:end_place AND drive.`date`=:date_
 					ORDER BY drive.price');
@@ -27,21 +27,37 @@ class CarService
 
 				$db = DB::getConnection();
 				$st = $db->prepare( 'SELECT drive.driver_id, drive.start_place, drive.end_place, drive.`date`, drive.start_time,
-					drive.end_time, drive.price, drive.place_number, users.username, drivers.rating, drive.drive_id
+					drive.end_time, drive.price, drive.place_number, users.username, drive.drive_id
 					FROM drive, drivers, users
 					WHERE drive.driver_id=drivers.driver_id AND drive.driver_id=users.id AND drive.start_place=:start_place AND drive.end_place=:end_place AND drive.`date`=:date_
-					ORDER BY drivers.rating DESC');
+					ORDER BY drivers.realrating DESC');
 
 				$st->execute( array( 'start_place' => $start_place, 'end_place' => $end_place, 'date_' => $date ) );
 			}
 			catch( PDOException $e ) { exit( 'PDO error ' . $e->getMessage() ); }
 		}
-		if ($st->rowCount() === 0) return null;
+		if ( $st->rowCount() === 0 ) return null;
 		$arr = array();
-		while ($row = $st->fetch())
+		foreach ( $st->fetchAll() as $row )
 		{
+            try
+			{
+
+				$db = DB::getConnection();
+				$st1 = $db->prepare( 'SELECT realrating
+                    FROM drivers
+					WHERE driver_id = :id');
+
+				$st1->execute( array( 'id' => $row['driver_id'] ) );
+			}
+			catch( PDOException $e ) { exit( 'PDO error ' . $e->getMessage() ); }
+            $rr = $st1->fetch();
+            if ( $rr['realrating'] == 0 )
+                $rating = "not rated yet";
+            else
+                $rating = (float)$rr['realrating'];
 			$arr[] = new Drive( $row['driver_id'], $row['start_place'], $row['end_place'], $row['date'], $row['start_time'], $row['end_time'],
-													$row['price'], $row['place_number'], $row['username'], $row['rating'], $row['drive_id'] );
+							    $row['price'], $row['place_number'], $row['username'], $rating, $row['drive_id'] );
 		}
 		return $arr;
 	}
