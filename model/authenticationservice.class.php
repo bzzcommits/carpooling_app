@@ -44,7 +44,7 @@ class AuthenticationService{
 
     try
 		{
-			$st = $db->prepare( 'INSERT INTO users VALUES( DEFAULT, :username, :password, NULL, NULL, :mail, :reg_seq, 0)' );
+			$st = $db->prepare( 'INSERT INTO users VALUES( DEFAULT, :username, :password, NULL, NULL, :mail, :reg_seq, 0, "")' );
 			$st->execute( array( 'username' => $username,
 				                 'password' => password_hash( $password, PASSWORD_DEFAULT ),
 				                 'mail' => $email,

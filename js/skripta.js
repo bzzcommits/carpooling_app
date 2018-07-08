@@ -46,8 +46,9 @@ function handleLogin(event) {
 }
 
 function handleNewPassword(event){
-  var username = $("#newpassus").val();
+  var username = $("#newpassus").html();
   var password = $("#newpass").val();
+  console.log("ispis: " + username + " " + password);
   $.ajax(
   {
     url: window.location.pathname + "?rt=home/setNewPassword",
@@ -88,6 +89,29 @@ function handleReset(event) {
     });
 }
 
+function handleSignUp(event) {
+    var username = $("#exampleInputUsername1").val();
+    var email = $("#exampleInputEmail1").val();
+    var password = $("#psw").val();
+    $.ajax(
+    {
+      url: window.location.pathname + "?rt=home/signup",
+      data: { username: username, email: email, password: password},
+      type: 'POST',
+      dataType: "text",
+      success: function( data )
+      {
+        console.log("data je ", JSON.stringify(data));
+        alert( data.msg );
+        window.location.href = window.location.pathname+"?rt=home";
+      },
+  		error: function( xhr, status )
+  		{
+      console.log("handleLogin :: error :: status = " + status );
+  		}
+    });
+}
+
 function sakrijMenu(){
     var vr = $("#sakrijMenu").html();
 
@@ -124,6 +148,7 @@ $(document).ready(
         $("#login").on("click", handleLogin);
         $("#resetbtn").on("click", handleReset);
         $("#newpassbtn").on("click", handleNewPassword);
+        $("#sgnup").on("click", handleSignUp);
 
         // provjera druge lozinke
         $("#cnf").on("input", handlePasswords);

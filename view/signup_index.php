@@ -16,7 +16,6 @@ require_once __SITE_PATH . '/view/_header.php';
     <div class="card card-register mx-auto mt-5">
       <div class="card-header">Register an Account</div>
       <div class="card-body">
-        <form method="post" action="<?php echo __SITE_URL; ?>/index.php?rt=home/signup">
 		  <div class="form-group">
             <label for="exampleInputUsername1">Username</label>
             <input class="form-control" id="exampleInputUsername1" type="text" placeholder="Username" name="username">
@@ -39,7 +38,6 @@ require_once __SITE_PATH . '/view/_header.php';
           </div>
 
           <button type="submit" name="signup" id="sgnup" class="btn btn-primary btn-block">Sign up!</button>
-        </form>
         <div class="text-center">
           <a class="d-block small mt-3" href="<?php echo __SITE_URL; ?>/index.php?rt=home/login">Login Page</a>
       <a class="d-block small" href="<?php echo __SITE_URL; ?>/index.php?rt=home/forgotPassword">Forgot Password?</a>
