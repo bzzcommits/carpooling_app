@@ -3,7 +3,7 @@
         <li class="nav-item" data-toggle="tooltip" data-placement="right" title="Contact">
           <a class="nav-link" href="<?php echo __SITE_URL; ?>/index.php?rt=contact">
             <i class="fa fa-info-circle"></i>
-            <span class="nav-link-text">Contact</span>
+            <span id="contact" class="nav-link-text">Contact</span>
           </a>
         </li>
 
@@ -11,7 +11,8 @@
 		<!-- tipka za sakriti menu, ostaviti samo ikone, treba napraviti js -->
       <ul class="navbar-nav sidenav-toggler">
         <li class="nav-item">
-          <a class="nav-link text-center" id="sidenavToggler">
+        <!-- id="sidenavToggler" -->
+          <a class="nav-link text-center" id="sakrijMenu">
             <i class="fa fa-fw fa-angle-left"></i>
           </a>
         </li>
