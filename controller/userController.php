@@ -3,31 +3,24 @@
 class userController extends BaseController
 {
 	public function index() {
+		$us = new UserService;
+		$user_id =$us->getIdByUsername($_SESSION['username']);
 
-		// Ako je bilo pritisnuto ime nekog korisnika...
-		if( isset($_GET['name']) )
-			$this->registry->template->show( 'other_profile_index' );
-		else {
-			$us = new UserService;
-			$user_id =$us->getIdByUsername($_SESSION['username']);
-
-			if ($us->isDriver($user_id) === true){
-				$this->registry->template->driver = true;
-				$this->registry->template->car = $us->getCarInfo($user_id);
-				$this->registry->template->poljeKomentara = $us->getComments($user_id);
-				$this->registry->template->poljeMojihVoznji = $us->getMyDrives($user_id);
-				$this->registry->template->poljeProslihVoznji = $us->historyOfDrives($user_id);
-			}
-			else
-				$this->registry->template->driver = false;
-
-			$this->registry->template->poljePratitelja = $us->getFollowers($user_id);
-			$this->registry->template->poljePracenih = $us->getFollowing($user_id);
-			$this->registry->template->poljeRez = $us->getReservationsAndNoComment($user_id);
-			$this->registry->template->user = $us->getProfileInfo($_SESSION['username']);
-			$this->registry->template->show( 'profile_index' );
+		if ($us->isDriver($user_id) === true){
+			$this->registry->template->driver = true;
+			$this->registry->template->car = $us->getCarInfo($user_id);
+			$this->registry->template->poljeKomentara = $us->getComments($user_id);
+			$this->registry->template->poljeMojihVoznji = $us->getMyDrives($user_id);
+			$this->registry->template->poljeProslihVoznji = $us->historyOfDrives($user_id);
 		}
+		else
+			$this->registry->template->driver = false;
 
+		$this->registry->template->poljePratitelja = $us->getFollowers($user_id);
+		$this->registry->template->poljePracenih = $us->getFollowing($user_id);
+		$this->registry->template->poljeRez = $us->getReservationsAndNoComment($user_id);
+		$this->registry->template->user = $us->getProfileInfo($_SESSION['username']);
+		$this->registry->template->show( 'profile_index' );
 	}
 
 	public function changeUserInfo() {
@@ -278,6 +271,18 @@ class userController extends BaseController
 		  echo json_encode( $message );
 		  flush();
 		  //exit( 0 );
+	}
+
+	public function follow(){
+		$us = new UserService;
+		$us->startFollowing($_GET['name']);
+		header( 'Location: ' . __SITE_URL . '/index.php?rt=otherUser&name=' . $_GET['name'] );
+	}
+
+	public function unfollow(){
+		$us = new UserService;
+		$us->stopFollowing($_GET['name']);
+		header( 'Location: ' . __SITE_URL . '/index.php?rt=otherUser&name=' . $_GET['name'] );
 	}
 };
 

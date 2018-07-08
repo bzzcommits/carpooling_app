@@ -16,11 +16,15 @@ class otherUserController extends BaseController
                           -> ovisi ako stignemo) */
 	public function index()
 	{
-
 		$username = $_GET['name'];
+		if ( $username === $_SESSION['username'] )
+			header( 'Location: ' . __SITE_URL . '/index.php?rt=user' );
 
 		$us = new UserService;
 		$user_id =$us->getIdByUsername($username);
+
+		// Kako bih znala trebam li ispisati Follow ili Unfollow button.
+		$this->registry->template->follow = $us->checkIfFollowing($_GET['name']);
 
 		if ($us->isDriver($user_id) === true){
 			$this->registry->template->driver = true;
@@ -36,6 +40,7 @@ class otherUserController extends BaseController
 		$this->registry->template->show( 'other_profile_index' );
 
 	}
+
 };
 
 ?>

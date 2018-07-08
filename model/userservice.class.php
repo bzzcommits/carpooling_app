@@ -780,5 +780,45 @@ class UserService
 		return $polje;
 	}
 
+	function checkIfFollowing($otherUser){
+		try{
+			$db = DB::getConnection();
+			$st = $db->prepare('SELECT id_user, id_followed_user FROM following, users WHERE id_user = :user_id AND users.username = :username AND id_followed_user = users.id');
+			$st->execute( array('user_id' => $_SESSION['user_id'], 'username' => $otherUser) );	// je li ok?
+		}
+		catch( PDOException $e )
+		{
+			exit( 'PDO error in class UserService function checkIfFollowing: ' . $e->getMessage() );
+		}
+		if( ! $st->fetch() )
+      return 0;
+		else
+			return 1;
+	}
+
+	function startFollowing($otherUser){
+		// PROVJERI DA NISU ISTI ups
+		try{
+			$db = DB::getConnection();
+			$st = $db->prepare('INSERT INTO following ( id_user, id_followed_user ) SELECT :user_id, id FROM users WHERE username=:username');
+			$st->execute( array('user_id' => $_SESSION['user_id'], 'username' => $otherUser) );	// je li ok?
+		}
+		catch( PDOException $e )
+		{
+			exit( 'PDO error in class UserService function startFollowing:  ' . $e->getMessage() );
+		}
+	}
+
+	function stopFollowing($otherUser){
+		try{
+			$db = DB::getConnection();
+			$st = $db->prepare('DELETE FROM following WHERE id_user = :user_id AND id_followed_user IN (SELECT id FROM users WHERE username=:username)');
+			$st->execute( array('user_id' => $_SESSION['user_id'], 'username' => $otherUser) );	// je li ok?
+		}
+		catch( PDOException $e )
+		{
+			exit( 'PDO error in class UserService function stopFollowing:  ' . $e->getMessage() );
+		}
+	}
 };
 ?>

@@ -4,7 +4,6 @@ require_once __SITE_PATH . '/view/_header.php';
 /* NAPOMENA: ovo jos nisam testirala, buduci da se prvo mora omoguciti klikanje na ime (Anastasija)
 
    TREBA:
-    - dodati sliku
     - dodati gumb "Follow this user" (treba onda dodati i pripadne f-je u model i controller)
 
 
@@ -35,10 +34,13 @@ require_once __SITE_PATH . '/view/_header.php';
 
   <div class="content-wrapper">
 
-    <!-- TREBA DODATI GUMB ZA FOLLOW (treba i u controller dodati funkciju koja ubacuje pratitelje) -->
-
 	<div class="card card-register mx-auto mt-5">
-	<div class="card-header">Profile</div>
+  	<div class="card-header">
+      <div class="nextTo">Profile</div>
+      <form method="post" action="<?php echo __SITE_URL; ?>/index.php?rt=user/<?php if ($follow) echo "un"?>follow&name=<?php  echo $user->username; ?>">
+          <button type="submit" id="followbtn" class="btn btn-primary btn-block"><?php echo ($follow ? "Unf" : "F") ?>ollow <?php  echo $user->username; ?></button>
+      </form>
+    </div>
           <div class="card-body">
             <div class="form-group">
               <img id="jej" src="user_images/<?php echo $user->image !== "" ? $user->username . "/" . $user->image : "avatar.png" ?>" alt="Something went wrong.">

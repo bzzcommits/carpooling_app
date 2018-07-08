@@ -1,0 +1,10 @@
+.nextTo{
+  float:left;
+}
+
+#followbtn{
+  display: inline-block;
+  text-align: center;
+  width:auto;
+  float: right;
+}

@@ -12,6 +12,7 @@ Posao:
   dodana tablica u bazu (deleted_drive), dodan contact dio (controller i view) (07.07.) - Anastasija
 - dodavanje uploadanja i brisanja profilne slike (7.7.) - Maja
 - dodan ostatak "profila" (povijest voznji, followeri, unos ocjena + komentara) (7.7.) - Anastasija
+- omogućavanje (un)followanja (8.7.) - Maja
 
 
 Ono što još treba napraviti:

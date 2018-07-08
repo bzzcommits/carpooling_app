@@ -110,7 +110,7 @@ require_once __SITE_PATH . '/view/_header.php';
                 <div class="card-body">
                 <div class="form-group">
         <?php  for ($i = 0; $i < count($poljePratitelja); ++$i) {
-                echo '<a href="' . __SITE_URL . '/index.php?rt=otherUser&name=' . $poljePracenih[$i] . '">' . $poljePracenih[$i] . '</a>';
+                echo '<a href="' . __SITE_URL . '/index.php?rt=otherUser&name=' . $poljePratitelja[$i] . '">' . $poljePratitelja[$i] . '</a>';
                 if ($i !== count($poljePratitelja) - 1 )
                     echo ", ";
            }
