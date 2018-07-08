@@ -137,9 +137,11 @@ require_once __SITE_PATH . '/view/_header.php';
                   <div class="card-header">YOUR FUTURE DRIVES</div>
                   <div class="card-body">
           <?php  for ($i = 0; $i < count($poljeMojihVoznji); ++$i) {
+                  $phpdate = strtotime($poljeMojihVoznji[$i][2]);
+                  $phpdate = date( 'd M Y', $phpdate );
                   echo '<div class="form-group">';
-                  echo "From " . $poljeMojihVoznji[$i][0] . "   to: " . $poljeMojihVoznji[$i][1]. "  on: " . $poljeMojihVoznji[$i][2]
-                  . "  at: " . $poljeMojihVoznji[$i][3] . " till: " . $poljeMojihVoznji[$i][4] . "  costs: " . $poljeMojihVoznji[$i][5] .  "   no. of reservations: "
+                  echo "From " . $poljeMojihVoznji[$i][0] . "   to " . $poljeMojihVoznji[$i][1]. ",  on " . $phpdate
+                  . ",  at " . $poljeMojihVoznji[$i][3] . " till " . $poljeMojihVoznji[$i][4] . ",  costs " . $poljeMojihVoznji[$i][5] .  "kn,   no. of reservations: "
                   . $poljeMojihVoznji[$i][6];
                   echo ' <button class= "otkaziVoznju" name="' . $poljeMojihVoznji[$i][7] . '" >Delete this ride</button>';
                   echo '</div>';
@@ -153,9 +155,11 @@ require_once __SITE_PATH . '/view/_header.php';
                   <div class="card-header">YOUR PAST DRIVES</div>
                   <div class="card-body">
           <?php  for ($i = 0; $i < count($poljeMojihVoznji); ++$i) {
+                  $phpdate = strtotime($poljeProslihVoznji[$i][2]);
+                  $phpdate = date( 'd M Y', $phpdate );
                   echo '<div class="form-group">';
-                  echo "From " . $poljeProslihVoznji[$i][0] . "   to " . $poljeProslihVoznji[$i][1]. "  on: " . $poljeProslihVoznji[$i][2]
-                  . "  at: " . $poljeProslihVoznji[$i][3] . " till: " . $poljeProslihVoznji[$i][4] . "  costs: " . $poljeProslihVoznji[$i][5];
+                  echo "From " . $poljeProslihVoznji[$i][0] . "   to " . $poljeProslihVoznji[$i][1]. ",  on " . $phpdate
+                  . ",  at " . $poljeProslihVoznji[$i][3] . " till " . $poljeProslihVoznji[$i][4] . ",  costs " . $poljeProslihVoznji[$i][5] .  "kn";
                   echo '</div>';
              }
             echo "</div></div>";
@@ -175,10 +179,12 @@ require_once __SITE_PATH . '/view/_header.php';
                 <div class="card-body">
 
         <?php   for ($i = 0; $i < count($poljeRezerv); ++$i) {
+                    $phpdate = strtotime($poljeRezerv[$i][3]);
+                    $phpdate = date( 'd M Y', $phpdate );
                     echo '<div class="form-group">';
                     echo 'Driver: <a href="' . __SITE_URL . '/index.php?rt=otherUser&name=' .  $poljeRezerv[$i][0] . '">' .  $poljeRezerv[$i][0] . '</a>';
-                    echo ", from " . $poljeRezerv[$i][1] . "   to: " . $poljeRezerv[$i][2]
-                    . "  on: " . $poljeRezerv[$i][3] . "  at: " . $poljeRezerv[$i][4] . " costs: " . $poljeRezerv[$i][6];
+                    echo ", from " . $poljeRezerv[$i][1] . "   to " . $poljeRezerv[$i][2]
+                    . ",  on " . $phpdate . ",  at " . $poljeRezerv[$i][4] . " till " . $poljeRezerv[$i][5] . ",  costs " . $poljeRezerv[$i][6] .  "kn";
                     // 7.element polja je drive_id. Pomocu njega i gumbda znamo koju voznju treba otkazati
                     $imeGumba = "otkaziRezervacijuBr_" . $poljeRezerv[$i][7]; // odvajamo s _ da mozemo explodat
                     echo ' <button class= "otkaziRezervaciju" name="' . $poljeRezerv[$i][7] . '" >Delete</button>';
@@ -193,10 +199,12 @@ require_once __SITE_PATH . '/view/_header.php';
                 <div class="card-body">
 
         <?php   for ($i = 0; $i < count($poljeBezKom); ++$i) {
+                    $phpdate = strtotime($poljeBezKom[$i][3]);
+                    $phpdate = date( 'd M Y', $phpdate );
                     echo '<div class="form-group">';
                     echo 'Driver: <a href="' . __SITE_URL . '/index.php?rt=otherUser&name=' .   $poljeBezKom[$i][0] . '">' .   $poljeBezKom[$i][0] . '</a>';
-                    echo ", from " . $poljeBezKom[$i][1] . "   to: " . $poljeBezKom[$i][2]
-                    . "  on: " . $poljeBezKom[$i][3] . "  at: " . $poljeBezKom[$i][4] . " costs: " . $poljeBezKom[$i][6];
+                    echo ", from " . $poljeBezKom[$i][1] . "   to " . $poljeBezKom[$i][2]
+                    . ",  on " . $phpdate . ",  at " . $poljeBezKom[$i][4] . " till " . $poljeBezKom[$i][5] . ",  costs " . $poljeBezKom[$i][6] .  "kn";
 
                     echo '<input class="form-control" id="ocjena" placeholder="Enter grade" type="text" />';
                     echo '<input class="form-control" id="komentar" placeholder="Enter comment" type="text" />';
@@ -214,12 +222,15 @@ require_once __SITE_PATH . '/view/_header.php';
                 <div class="card-body">
 
         <?php   for ($i = 0; $i < count($poljeIzbris); ++$i) {
+                    $phpdate = strtotime($poljeIzbris[$i][3]);
+                    $phpdate = date( 'd M Y', $phpdate );
                     echo '<div class="form-group">';
                     echo 'Driver: <a href="' . __SITE_URL . '/index.php?rt=otherUser&name=' .   $poljeIzbris[$i][0] . '">' .    $poljeIzbris[$i][0] . '</a>';
-                    echo ", from " . $poljeIzbris[$i][1] . "   to: " . $poljeIzbris[$i][2]
-                    . "  on: " . $poljeIzbris[$i][3] . "  at: " . $poljeIzbris[$i][4] . " costs: " . $poljeIzbris[$i][6];
+                    echo ", from " . $poljeIzbris[$i][1] . "   to " . $poljeIzbris[$i][2]. ",  on " . $phpdate
+                    . ",  at " . $poljeIzbris[$i][4] . " till " . $poljeIzbris[$i][5] . ",  costs " . $poljeIzbris[$i][6] .  "kn";
                     echo ' <button class= "procitanaPoruka" name="' . $poljeIzbris[$i][7] . '" >Read the message</button>';
                     echo '</div>';
+
                }
               echo "</div></div>";
         }

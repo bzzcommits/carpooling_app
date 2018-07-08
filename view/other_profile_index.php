@@ -101,10 +101,13 @@ require_once __SITE_PATH . '/view/_header.php';
                     <div class="card-header">HISTORY OF DRIVES</div>
                     <div class="card-body">
              <?php  for ($i = 0; $i < count($poljeProslihVoznji); ++$i) {
-                            echo '<div class="form-group">';
-                            echo "From " . $poljeProslihVoznji[$i][0] . "   to " . $poljeProslihVoznji[$i][1]. "  on: " . $poljeProslihVoznji[$i][2]
-                            . "  at: " . $poljeProslihVoznji[$i][3] . " till: " . $poljeProslihVoznji[$i][4] . "  costs: " . $poljeProslihVoznji[$i][5];
-                            echo '</div>';
+                         $phpdate = strtotime($poljeProslihVoznji[$i][2]);
+                         $phpdate = date( 'd M Y', $phpdate );
+
+                        echo '<div class="form-group">';
+                        echo "From " . $poljeProslihVoznji[$i][0] . "   to " . $poljeProslihVoznji[$i][1]. ",  on " . $phpdate
+                        . ",  at " . $poljeProslihVoznji[$i][3] . " till " . $poljeProslihVoznji[$i][4] . "  costs " . $poljeProslihVoznji[$i][5] . "kn";
+                        echo '</div>';
                        }
                        echo "</div></div>";
                 }
