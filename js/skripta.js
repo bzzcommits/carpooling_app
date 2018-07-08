@@ -21,7 +21,31 @@ function handleLogout(){
         $(this).attr('href', window.location.href);
 }
 
+function sakrijMenu(){
+    var vr = $("#sakrijMenu").html();
+    
+    $("#contact").html("");
+    $("#profile").html("");
+    $("#drive").html("");
+    $("#home").html("");
+    //$("#exampleAccordion").css("display", "none");
+    //$("#page-top").css( "width", $( window ).width()*0.9 + "px");
+    //$(".content-wrapper").css("maxWidth", $( window ).width()*0.9 + "px");
 
+}
+/*
+
+function sakrijMenu(){
+    var vr = $("#sakrijMenu").html();
+    
+    getElementById("contact").style.display = "none";
+    getElementById("profile").style.display = "none";
+    getElementById("drive").style.display = "none";
+    getElementById("home").style.display = "none";
+    $("#exampleAccordion").width("50px");
+
+}
+*/
 $(document).ready(
     function() {
         // klik na logout
@@ -38,5 +62,12 @@ $(document).ready(
         $("#offer_drive").on("click", function(){
           window.location.href = window.location.pathname+"?rt=pretrazi/offers";
         });
+        
+        $("#sakrijMenu").on( "click", sakrijMenu);
+        
+        $("#DateNew").datepicker({dateFormat: "yy-mm-dd"});
+        $("#Date").datepicker({dateFormat: "yy-mm-dd"});
+        
+        $("#searchId").on( "click", pronadiKorisnika );
     }
 );
