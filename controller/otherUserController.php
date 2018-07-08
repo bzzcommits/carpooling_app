@@ -10,10 +10,7 @@ class otherUserController extends BaseController
           Sprema osobne podatke drugog username-a.
           Ako je taj username i vozac, sprema i:
                 - ukupnu ocjenu
-                - posebno ocjene + komentar
-                        ( za nas projekt, stavimo da ispise sve ocjene, buduci da ih nece biti puno;
-                          inace, mogle bi staviti da ispise samo zadnjih 10 ocjena, pa da user moze sam kliknuti da mu izbaci jos komentare
-                          -> ovisi ako stignemo) */
+                - posebno ocjene + komentar */
 	public function index()
 	{
 		$username = $_GET['name'];
