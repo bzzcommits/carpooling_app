@@ -55,11 +55,11 @@ class PretraziController extends BaseController
 
 		 if ( !isset( $_POST['start_place_new'] ) || !preg_match( '/^[a-zA-Z -]+$/', $_POST['start_place_new'] )
 			 || !isset( $_POST['end_place_new'] ) || !preg_match( '/^[a-zA-Z -]+$/', $_POST['end_place_new'] )
-			 || !isset( $_POST['date_new'] ) || !preg_match( '/^[0-9]{4}-[0-9]{2}-[0-9]{2}$/', $_POST['date_new'] )
-			 || !isset( $_POST['start_time_new'] ) || !preg_match( '/^[0-1][0-9]|{2}[0-4]{:}[0-5][0-9]$/', $_POST['start_time_new'] )
-			 || !isset( $_POST['end_time_new'] ) || !preg_match( '/^[0-1][0-9]|{2}[0-4]{:}[0-5][0-9]$/', $_POST['end_time_new'] )
-			 || !isset( $_POST['price_new'] ) || !preg_match( '/%d+/', $_POST['price_new'] )
-			 || !isset( $_POST['seats_new'] ) || !preg_match( '/%d+/', $_POST['seats_new'] ) )
+			 || !isset( $_POST['date_new'] ) || !preg_match( '/^[0-9]{4}-[0-9]{2}-[0-9]{2}$/', $_POST['date_new'] ) //|| !preg_match( '/^20[1-9][0-9]-((((0[13578])|(1[02]))-((0[1-9])|([12][0-9])|(3[0-1])))|((0[469]|11)-((0[1-9])|([12][0-9])|30))|(02-((0[1-9])|([12][0-9])))))$/', $_POST['date_new'] )
+			 || !isset( $_POST['start_time_new'] ) || !preg_match( '/^(([0-1][0-9])|(2[0-3])):[0-5][0-9]$/', $_POST['start_time_new'] )
+			 || !isset( $_POST['end_time_new'] ) || !preg_match( '/^(([0-1][0-9])|(2[0-3])):[0-5][0-9]$/', $_POST['end_time_new'] )
+			 || !isset( $_POST['price_new'] ) || !preg_match( '/^[1-9][0-9]*$/', $_POST['price_new'] )
+			 || !isset( $_POST['seats_new'] ) || !preg_match( '/^[1-9][0-9]*$/', $_POST['seats_new'] ) )
 		{
 			//$message = "Unos nije bio dobar, molimo poku�ajte ponovno. ";
 			//provjeriti je li message globalna, kako joj se pristupa
@@ -68,10 +68,11 @@ class PretraziController extends BaseController
 			header( 'Location: ' . __SITE_URL . '/index.php?rt=pretrazi/index' );
 			exit();
 		}
+        
 		$drive = new Drive( $_SESSION['user_id'], $_POST['start_place_new'],
 							$_POST['end_place_new'], $_POST['date_new'], $_POST['start_time_new'],
 							$_POST['end_time_new'], $_POST['price_new'],
-							$_POST['seats_new'], $_SESSION['username'] );
+							$_POST['seats_new'], $_SESSION['username'], null, null);
 
 		$car = new CarService();
 
