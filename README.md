@@ -10,13 +10,13 @@ Posao:
 - dodana većina dijela u vezi osobnog profila (treba jos dodati neke funkcije, ispise, stupac u bazu) (04.06.) - Anastasija
 - dodan dio funkcija za osobni profil (treba još samo omogućiti ubacivanje komentara i ocjena + treba malo modificirati bazu),
   dodana tablica u bazu (deleted_drive), dodan contact dio (controller i view) (07.07.) - Anastasija
-- dodavanje uploadanja i brisanja profilne slike (7.7.) - Maja
+- dodavanje uploadanja i brisanja profilne slike, klik na username koji vodi do tuđeg profila (7.7.) - Maja
 - dodan ostatak "profila" (povijest voznji, followeri, unos ocjena + komentara) (7.7.) - Anastasija
 - omogućavanje (un)followanja (8.7.) - Maja
 
 
 Ono što još treba napraviti:
 
-- username = link koji vodi na other_profile_index.php
-- other_profile_index.php: ispis slike tog korisnika, gumb "Follow this user" (treba i dodati potrebne funkcije u pripadni controller + model)
+- prepraviti stvari sa slikom
+- ...
 - testirati svaku funkcionalnost!

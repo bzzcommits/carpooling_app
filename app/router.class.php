@@ -1,7 +1,7 @@
 <?php
 
 // Funkcionalnost routera je izdvojena u zasebnu klasu.
-class Router 
+class Router
 {
 	// Router također dijeli registry.
 	private $registry;
@@ -15,7 +15,7 @@ class Router
 	public $controller;
 
 	// Ime akcije koja će se izvršiti u controlleru (index po defaultu).
-	public $action; 
+	public $action;
 
 	function __construct( $registry )
 	{
@@ -23,7 +23,7 @@ class Router
 	}
 
 	// Sprema putanju do kontrolera u $this->path.
-	function setPath( $path ) 
+	function setPath( $path )
 	{
 		// Provjeri je li u $path zaista spremljena putanja (niz direktorija).
 		if( is_dir( $path ) == false )
@@ -67,7 +67,7 @@ class Router
 
 
 	// Analiziraj $_GET['rt'], odredi ime controllera i akcije.
-	private function getController() 
+	private function getController()
 	{
 		// Dohvati $_GET['rt']
 		$route = ( empty( $_GET['rt'] ) ) ? '' : $_GET['rt'];
@@ -81,6 +81,11 @@ class Router
 			$this->controller = $parts[0];
 			if( isset( $parts[1] ) )
 				$this->action = $parts[1];
+
+			// Ovjde provjerim je li neulogirani korisnik pokušao pristupiti stranicama koje zahtjevaju prethodni login.
+			// Ako je, vraćam ga na home.
+			if ( in_array( $this->controller, array("otherUser","pretrazi","user")) && !isset($_SESSION['username']) )
+				header( 'Location: ' . __SITE_URL . '/index.php?rt=home' );
 		}
 
 		if( empty( $this->controller ) )
