@@ -17,7 +17,6 @@ require_once __SITE_PATH . '/view/_header.php';
 ?>
 
  <title> Profile </title>
- <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.3.1/jquery.js"></script>
 </head>
 
 <body class="fixed-nav sticky-footer bg-dark" id="page-top">
@@ -237,103 +236,6 @@ require_once __SITE_PATH . '/view/_header.php';
 
     ?>
 
-
-<script>
-$(document).ready( function()
-{
-    $( "body" ).on( "click", "button.otkaziRezervaciju", otkaziRezervaciju );
-    $( "body" ).on( "click", "button.otkaziVoznju", otkaziVoznju );
-    $( "body" ).on( "click", "button.procitanaPoruka", procitanaPoruka );
-    $( "body" ).on( "click", "button.ocjenjenaVoznja", ocjenjenaVoznja );
-});
-function otkaziRezervaciju(event) {
-    var ret = confirm("Are you sure you want to delete this reservation?");
-    if (ret === true) {
-        var gumb = $(this);
-        var ime = gumb.prop("name");
-        $.ajax(
-            {
-                url: window.location.pathname + "?rt=user/otkazanaRezervacija",
-                data: { idVoznje: ime},
-                type: 'POST',
-        		dataType: "json",
-    			success: function( data )
-    			{
-                    window.location.reload(false);
-                    //console.log("uspjesno izbrisana rezervacija");
-    			}
-            }
-        );
-    }
-}
-
-function otkaziVoznju(event) {
-    var ret = confirm("Are you sure you want to delete this drive?");
-    if (ret === true) {
-        var gumb = $(this);
-        var ime = gumb.prop("name");
-        $.ajax(
-            {
-                url: window.location.pathname + "?rt=user/otkazanaVoznja",
-                data: { idVoznje: ime},
-                type: 'POST',
-        		dataType: "json",
-    			success: function( data )
-    			{
-                    window.location.reload(false);
-                    //console.log("uspjesno izbrisana voznja");
-    			}
-            }
-        );
-    }
-}
-
-function procitanaPoruka(event) {
-    alert("The driver canceled this drive!");
-
-    var gumb = $(this);
-    var ime = gumb.prop("name");
-    $.ajax(
-        {
-            url: window.location.pathname + "?rt=user/procitanaPoruka",
-            data: { idVoznje: ime},
-            type: 'POST',
-    		dataType: "json",
-			success: function( data )
-			{
-                window.location.reload(false);
-                console.log("uspjesno procitana poruka");
-			}
-        }
-    );
-
-}
-
-function ocjenjenaVoznja(event) {
-    var gumb = $(this);
-    var ime = gumb.prop("name");
-    var ocjena = Number ( $("#ocjena").val() );
-    var komentar = $("#komentar").val();
-    if ( ocjena < 1 || ocjena > 5 )
-        alert("The grade has to be between 1 and 5");
-    else {
-        $.ajax(
-            {
-                url: window.location.pathname + "?rt=user/unesenKomentar",
-                data: { idVoznje: ime, ocjena: ocjena, komentar: komentar},
-                type: 'POST',
-        		dataType: "json",
-    			success: function( data )
-    			{
-                    window.location.reload(false);
-                    // console.log("uspjesno unesen komentar");
-    			}
-            }
-        );
-    }
-}
-
-</script>
 
     <!-- /.container-fluid-->
     <!-- /.content-wrapper-->

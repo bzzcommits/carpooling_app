@@ -665,6 +665,7 @@ class UserService
 	}
 
 	function insertComment($id_voznje, $ocjena, $komentar) {
+		$ocjena = round( $ocjena );
 		$id = UserService::getIdByUsername($_SESSION['username']);
 		try
 		{
