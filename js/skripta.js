@@ -45,6 +45,49 @@ function handleLogin(event) {
     });
 }
 
+function handleNewPassword(event){
+  var username = $("#newpassus").val();
+  var password = $("#newpass").val();
+  $.ajax(
+  {
+    url: window.location.pathname + "?rt=home/setNewPassword",
+    data: { username: username, password: password},
+    type: 'POST',
+    dataType: "json",
+    success: function( data )
+    {
+      console.log("data je ", JSON.stringify(data));
+      alert( data.msg );
+      window.location.href = window.location.pathname+"?rt=home/login";
+    },
+    error: function( xhr, status )
+    {
+      console.log("handleLogin :: error :: status = " + status );
+    }
+  });
+}
+
+function handleReset(event) {
+    var email = $("#exampleInputEmail1").val();
+    $.ajax(
+    {
+      url: window.location.pathname + "?rt=home/forgotPassword",
+      data: { email: email},
+      type: 'POST',
+      dataType: "json",
+      success: function( data )
+      {
+        console.log("data je ", JSON.stringify(data));
+        alert( data.msg );
+        window.location.href = window.location.pathname+"?rt=home";
+      },
+  		error: function( xhr, status )
+      {
+        console.log("handleLogin :: error :: status = " + status );
+  		}
+    });
+}
+
 function sakrijMenu(){
     var vr = $("#sakrijMenu").html();
 
@@ -79,6 +122,8 @@ $(document).ready(
     function() {
         $("#lgout").on("click", handleLogout);
         $("#login").on("click", handleLogin);
+        $("#resetbtn").on("click", handleReset);
+        $("#newpassbtn").on("click", handleNewPassword);
 
         // provjera druge lozinke
         $("#cnf").on("input", handlePasswords);

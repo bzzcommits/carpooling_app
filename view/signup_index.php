@@ -42,8 +42,7 @@ require_once __SITE_PATH . '/view/_header.php';
         </form>
         <div class="text-center">
           <a class="d-block small mt-3" href="<?php echo __SITE_URL; ?>/index.php?rt=home/login">Login Page</a>
-		  <!-- promijeniti href !! -->
-          <a class="d-block small" href="forgot_password.php">Forgot Password?</a>
+      <a class="d-block small" href="<?php echo __SITE_URL; ?>/index.php?rt=home/forgotPassword">Forgot Password?</a>
 	   </div>
 
       </div>

@@ -12,8 +12,15 @@ class HomeController extends BaseController
 						else
 								$message['error'] = "You've just registered!";
 				}
-
-				$this->registry->template->show( 'home_index' );
+				else if( isset( $_GET['np'] ) && preg_match( '/^[a-z]{20}$/', $_GET['np'] ) && isset( $_GET['npusername'] ))
+				{
+						// Provjeri poklapaju li se username i registracijski niz. To mi je provjera za mijenjanje lozinke.
+						$as = new AuthenticationService();
+						if( $as->doTheyMatch($_GET['np'], $_GET['npusername']) )
+							$this->registry->template->show( 'new_password' );
+				}
+				else
+					$this->registry->template->show( 'home_index' );
 		}
 
 		public function login()
@@ -26,7 +33,7 @@ class HomeController extends BaseController
 
 								$user = $as->validateUser( $_POST["username"], $_POST["password"]);
 
-								if( gettype($user) !== 'int' )
+								if( gettype($user) !== 'integer' )
 								{
 									$_SESSION[ 'user_id' ] = $user->id;
 									$_SESSION[ 'username' ] = $user->username;
@@ -110,6 +117,41 @@ class HomeController extends BaseController
 
 				header( 'Location: ' . __SITE_URL . '/index.php?rt=home' );
 				exit();
+		}
+
+		public function forgotPassword()
+		{
+			$message = [];
+			if( isset( $_POST['email']) ){
+				$as = new AuthenticationService();
+				switch ($as->resetPassword( $_POST['email'])) {
+					case 1:
+						$message[ 'msg' ] = "Instructions on how to reset your password are sent to your e-mail.";
+						break;
+					case 0:
+						$message[ 'msg' ] = "There is no user with this e-mail.";
+						break;
+					case -1:
+						$message[ 'msg' ] = "E-mail was not successfully sent.";
+						break;
+				}
+				homeController::sendJSONandExit($message);
+			}
+			else
+				$this->registry->template->show( 'forgot_password' );
+		}
+
+		public function setNewPassword()
+		{
+			$message = [];
+			if( isset( $_POST['password']) && isset( $_POST['username']) ){
+				$as = new AuthenticationService();
+				$as->changePassword( $_POST['password'], $_POST['username']);
+				$message['msg'] = "Password succesfully changed.";
+				homeController::sendJSONandExit($message);
+			}
+			else
+				header( 'Location: ' . __SITE_URL . '/index.php?rt=home' );
 		}
 
 		public function sendJSONandExit( $message ) {

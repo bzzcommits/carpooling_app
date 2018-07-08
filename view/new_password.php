@@ -1,7 +1,7 @@
 <?php
 require_once __SITE_PATH . '/view/_header.php';
 ?>
-  <title>Forgot password</title>
+  <title>New password</title>
 
 </head>
 
@@ -14,15 +14,13 @@ require_once __SITE_PATH . '/view/_header.php';
     <div class="card card-login mx-auto mt-5">
       <div class="card-body">
         <div class="text-center mt-4 mb-5">
-          <h4>Forgot your password?</h4>
-          <p>Enter your email address and we will send you instructions on how to reset your password.</p>
+          <div>Enter new password,<div id="newpassus"><?php echo $_GET['npusername'];?></div></div>
         </div>
 
-
           <div class="form-group">
-            <input class="form-control" id="exampleInputEmail1" type="email" aria-describedby="emailHelp" placeholder="Enter email address" name="reset_email">
+            <input class="form-control" id="newpass" type="password"  placeholder="New password">
           </div>
-		      <button type="submit" name="reset" class="btn btn-primary btn-block" id="resetbtn">Reset Password</button>
+		      <button type="submit" name="reset" class="btn btn-primary btn-block" id="newpassbtn">Change Password</button>
 
         <div class="text-center">
           <a class="d-block small mt-3" href="<?php echo __SITE_URL; ?>/index.php?rt=home/signup"> Register an Account </a>
