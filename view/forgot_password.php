@@ -1,5 +1,5 @@
-<?php 
-require_once __SITE_PATH . '/view/_header.php'; 
+<?php
+require_once __SITE_PATH . '/view/_header.php';
 ?>
   <title>Forgot password</title>
 
@@ -18,7 +18,7 @@ require_once __SITE_PATH . '/view/_header.php';
           <h4>Forgot your password?</h4>
           <p>Enter your email address and we will send you instructions on how to reset your password.</p>
         </div>
-		
+
 		<!-- postaviti action !! -->
         <form  method="post" action="<?php echo __SITE_URL; ?>/index.php?rt=home/reset">
           <div class="form-group">
@@ -26,7 +26,7 @@ require_once __SITE_PATH . '/view/_header.php';
           </div>
 		  <button type="submit" name="reset" class="btn btn-primary btn-block">Reset Password</button>
         </form>
-		
+
         <div class="text-center">
           <a class="d-block small mt-3" href="<?php echo __SITE_URL; ?>/index.php?rt=home/signup"> Register an Account </a>
           <a class="d-block small" href="<?php echo __SITE_URL; ?>/index.php?rt=home/login"> Login Page </a>
@@ -34,8 +34,7 @@ require_once __SITE_PATH . '/view/_header.php';
       </div>
     </div>
   </div>
-  
+
 <?php
-require_once __SITE_PATH . '/view/message.php';
 require_once __SITE_PATH . '/view/_footer.php';
 ?>

@@ -21,9 +21,33 @@ function handleLogout(){
         $(this).attr('href', window.location.href);
 }
 
+function handleLogin(event) {
+    var username = $("._username").val();
+    var password = $("._password").val();
+    $.ajax(
+    {
+      url: window.location.pathname + "?rt=home/login",
+      data: { username: username, password: password},
+      type: 'POST',
+      dataType: "json",
+      success: function( data )
+      {
+        console.log("data je ", JSON.stringify(data));
+        if( data.error !== "" )
+          alert( data.error );
+        else
+          window.location.href = window.location.pathname+"?rt=home";
+      },
+  		error: function( xhr, status )
+  		{
+      console.log("handleLogin :: error :: status = " + status );
+  		}
+    });
+}
+
 function sakrijMenu(){
     var vr = $("#sakrijMenu").html();
-    
+
     $("#contact").html("");
     $("#profile").html("");
     $("#drive").html("");
@@ -37,7 +61,7 @@ function sakrijMenu(){
 
 function sakrijMenu(){
     var vr = $("#sakrijMenu").html();
-    
+
     getElementById("contact").style.display = "none";
     getElementById("profile").style.display = "none";
     getElementById("drive").style.display = "none";
@@ -48,8 +72,8 @@ function sakrijMenu(){
 */
 $(document).ready(
     function() {
-        // klik na logout
-        $("#lgout").on("click", handleLogout)
+        $("#lgout").on("click", handleLogout);
+        $("#login").on("click", handleLogin);
 
         // provjera druge lozinke
         $("#cnf").on("input", handlePasswords);
@@ -62,12 +86,12 @@ $(document).ready(
         $("#offer_drive").on("click", function(){
           window.location.href = window.location.pathname+"?rt=pretrazi/offers";
         });
-        
+
         $("#sakrijMenu").on( "click", sakrijMenu);
-        
+
         $("#DateNew").datepicker({dateFormat: "yy-mm-dd"});
         $("#Date").datepicker({dateFormat: "yy-mm-dd"});
-        
-        $("#searchId").on( "click", pronadiKorisnika );
+
+        //$("#searchId").on( "click", pronadiKorisnika );
     }
 );

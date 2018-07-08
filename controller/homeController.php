@@ -8,9 +8,9 @@ class HomeController extends BaseController
 				{
 						$as = new AuthenticationService();
 						if( $as->registerUser( $_GET[ 'niz' ] ) === false )
-								$this->registry->template->message = "This registration sentence doesn't belong to one and only one user!";
+								$message['error'] = "This registration sentence doesn't belong to one and only one user!";
 						else
-								$this->registry->template->message = "You've just registered!";
+								$message['error'] = "You've just registered!";
 				}
 
 				$this->registry->template->show( 'home_index' );
@@ -18,51 +18,40 @@ class HomeController extends BaseController
 
 		public function login()
 		{
-				if( isset( $_POST[ 'login' ] ) )
+				$message = [];
+				if( isset( $_POST[ 'username' ] ) && isset( $_POST[ 'password' ] ) )
 				{
-						if( isset( $_POST[ 'username' ] ) && isset( $_POST[ 'password' ] ) && $_POST[ 'username' ] != '' && $_POST[ 'password' ] != '' )
-						{
-								if( !preg_match( '/^[a-zA-Z]{3,10}$/', $_POST['username'] ) )
-										$this->registry->template->message = "A username must have between 3 and 10 letters!";
-								else
+						if( preg_match( '/^[a-zA-Z0-9_]{1,15}$/', $_POST['username'] ) ){
+								$as = new AuthenticationService();
+
+								$user = $as->validateUser( $_POST["username"], $_POST["password"]);
+
+								if( gettype($user) !== 'int' )
 								{
-										$as = new AuthenticationService();
-
-										$user = $as->validateUser( $_POST["username"], $_POST["password"]);
-
-										switch( $user )
-										{
-												case 0:
-														$this->registry->template->message = "You haven't signed up yet!";
-														break;
-												case -1:
-														$this->registry->template->message = "Wrong password!";
-														break;
-												case -2:
-														$this->registry->template->message = "You haven't registered yet!";
-														break;
-												case 1:
-														$_SESSION[ 'user_id' ] = $user->id;
-														$_SESSION[ 'username' ] = $user->username;
-														header( 'Location: ' . __SITE_URL . '/index.php?rt=home' );
-														exit();
-										}
+									$_SESSION[ 'user_id' ] = $user->id;
+									$_SESSION[ 'username' ] = $user->username;
+									$message['error'] = "";
 								}
 
+								else
+									switch( $user )
+									{
+											case 0:
+													$message['error'] = "Nonexisting username!";
+													break;
+											case -1:
+													$message['error'] = "Wrong password!";
+													break;
+											case -2:
+													$message['error'] = "You haven't registered yet!";
+									}
 						}
 						else
-								$this->registry->template->message = "Enter both username and password!";
+							$message['error'] = "Incorrect username (allowed only letters, numbers and underscore, 15 characters max)!";
+						homeController::sendJSONandExit($message);
 				}
 				else
-				{
-						if( isset( $_SESSION[ 'username' ] ) )
-						{
-								header( 'Location: ' . __SITE_URL . '/index.php?rt=home' );
-								exit();
-						}
-				}
-				$this->registry->template->show( 'login_index' );
-				exit();
+						$this->registry->template->show( 'login_index' );
 		}
 
 		public function signup()
@@ -73,10 +62,10 @@ class HomeController extends BaseController
 						&& $_POST[ 'username' ] != '' && $_POST[ 'password' ] != '' && $_POST[ 'email' ] != '' )
 						{
 								if( !preg_match( '/^[a-zA-Z]{3,10}$/', $_POST['username'] ) )
-										$this->registry->template->message = "A username must have between 3 and 10 letters!";
+										$message['error'] = "A username must have between 3 and 10 letters!";
 
 								else if( !filter_var( $_POST['email'], FILTER_VALIDATE_EMAIL) )
-										$this->registry->template->message = "Enter valid e-mail address!";
+										$message['error'] = "Enter valid e-mail address!";
 
 								else
 								{
@@ -87,20 +76,20 @@ class HomeController extends BaseController
 										switch( $user )
 										{
 												case 0:
-														$this->registry->template->message = "Entered username or e-mail address already exists!";
+														$message['error'] = "Entered username or e-mail address already exists!";
 														break;
 												case -1:
-														$this->registry->template->message = "E-mail couldn't have been sent!";
+														$message['error'] = "E-mail couldn't have been sent!";
 														break;
 												case 1:
-														$this->registry->template->message = 'You\'ve just signed up!';
+														$message['error'] = 'You\'ve just signed up!';
 														break;
 										}
 								}
 
 						}
 						else
-								$this->registry->template->message = "Enter username, password and e-mail address!";
+								$message['error'] = "Enter username, password and e-mail address!";
 				}
 				else
 				{
@@ -114,13 +103,20 @@ class HomeController extends BaseController
 				exit();
 		}
 
-		function logout()
+		public function logout()
 		{
 				session_unset();
 				session_destroy();
 
 				header( 'Location: ' . __SITE_URL . '/index.php?rt=home' );
 				exit();
+		}
+
+		public function sendJSONandExit( $message ) {
+				header( 'Content-type:application/json;charset=utf-8' );
+				echo json_encode( $message );
+				flush();
+				//exit( 0 );
 		}
 };
 

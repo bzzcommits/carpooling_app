@@ -1,5 +1,5 @@
-<?php 
-require_once __SITE_PATH . '/view/_header.php'; 
+<?php
+require_once __SITE_PATH . '/view/_header.php';
 ?>
 
   <title>Login</title>
@@ -14,14 +14,13 @@ require_once __SITE_PATH . '/view/_header.php';
 	<div class="card card-login mx-auto mt-5">
 	  <div class="card-header">Login</div>
 	  <div class="card-body">
-		<form method="post" action="<?php echo __SITE_URL; ?>/index.php?rt=home/login">
 		  <div class="form-group">
 			<label for="exampleInputEmail1">Username</label>
-			<input class="form-control" id="exampleInputEmail1" type="text" placeholder="Username" name="username" />
+			<input class="form-control _username" id="exampleInputEmail1" type="text" placeholder="Username" name="username" />
 		  </div>
 		  <div class="form-group">
 			<label for="exampleInputPassword1">Password</label>
-			<input class="form-control" id="exampleInputPassword1" type="password" placeholder="Password" name="password" />
+			<input class="form-control _password" id="exampleInputPassword1" type="password" placeholder="Password" name="password" />
 		  </div>
 		  <!--
 		  <div class="form-group">
@@ -31,8 +30,7 @@ require_once __SITE_PATH . '/view/_header.php';
 			</div>
 		  </div>
 		  -->
-		  <button type="submit" name="login" class="btn btn-primary btn-block">Log in!</button>
-		</form>
+		  <button name="login" class="btn btn-primary btn-block" id="login">Log in!</button>
 		<div class="text-center">
 		  <a class="d-block small mt-3" href="<?php echo __SITE_URL; ?>/index.php?rt=home/signup">Register an Account</a>
 		  <!-- promijeniti href !! -->
@@ -42,8 +40,6 @@ require_once __SITE_PATH . '/view/_header.php';
 	</div>
 	</div>
 
-
 <?php
-require_once __SITE_PATH . '/view/message.php';
 require_once __SITE_PATH . '/view/_footer.php';
 ?>
