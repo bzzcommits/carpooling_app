@@ -73,7 +73,10 @@ class userController extends BaseController
 
 	// Ovdje se mijenjaju dimenzije slike na zadane dimenzije.
 	public function resizeImage($sourceImage,$sourceImageWidth,$sourceImageHeight) {
-		$resizeWidth = 220; $resizeHeight = 250;
+		$x = 1;
+		if ( $sourceImageHeight > 250 )
+			$x = $sourceImageHeight/250;
+		$resizeWidth = $sourceImageWidth/$x; $resizeHeight = $sourceImageHeight/$x;
 		$destinationImage = imagecreatetruecolor($resizeWidth,$resizeHeight);
 		imagecopyresampled($destinationImage,$sourceImage,0,0,0,0,$resizeWidth,$resizeHeight,$sourceImageWidth,$sourceImageHeight);
 		// Ovo ispod mijenja boju pozadine slike u bijelu, ali ostaje crni obrub oko slike nakon toga pa ipak ne koristim.
@@ -108,8 +111,8 @@ class userController extends BaseController
 				$errorMsg[] = "Sorry, file already exists.";
 
 			// Provjeri veličinu.
-			else if ($_FILES["imageToUpload"]["size"] > 1000000)
-				$errorMsg[] = "Sorry, your file is too large.";
+			/*else if ($_FILES["imageToUpload"]["size"] > 1000000)
+				$errorMsg[] = "Sorry, your file is too large.";*/
 
 			// Dozvoli ove formate slike.
 			else if( $imageFileType != "jpg" && $imageFileType != "png" && $imageFileType != "jpeg" && $imageFileType != "gif" )
