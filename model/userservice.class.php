@@ -116,6 +116,10 @@ class UserService
 	function changeUsername ( $username ) {
 		// prvo provjerimo je li novo korisnicko ime zauzeto
 		$newUsername = $_POST['changeUsername'];
+
+		if ( !(preg_match( '/^[a-zA-Z0-9_]{1,20}$/' ,$newUsername) ) )
+			return false;
+
 		try
 		{
 			$db = DB::getConnection();
@@ -149,6 +153,15 @@ class UserService
 	}
 	function changeYear ( $username ) {
 		$newYear = $_POST['changeYear'];
+
+		if ( !(preg_match( '/^\d\d\d\d$/' ,$newYear) ) )
+			return false;
+
+		$newYear = (int) $newYear;
+
+		if ($newYear < 1900 || $newYear > 2000)	//	npr, moraju biti punoljetni
+			return false;
+
 		try
 		{
 			$db = DB::getConnection();
@@ -164,6 +177,10 @@ class UserService
 	}
 	function changeTelephone ( $username ) {
 		$newTelephone = $_POST['changeTelephone'];
+
+		if ( !(preg_match( '/^\d\d\d\d\d\d\d\d\d\d$/' ,$newTelephone) ) )
+			return false;
+
 		try
 		{
 			$db = DB::getConnection();
@@ -179,6 +196,10 @@ class UserService
 	}
 	function changeMail ( $username ) {
 		$newMail = $_POST['changeMail'];
+
+		if (!filter_var($newMail, FILTER_VALIDATE_EMAIL))
+			return false;
+
 		try
 		{
 			$db = DB::getConnection();
@@ -292,6 +313,8 @@ class UserService
 
 	function changeCarType($id) {
 		$newCarType = $_POST['changeCarType'];
+		if ( !(preg_match( '/^[a-zA-Z0-9]{1,20}$/' ,$newCarType) ) )
+			return false;
 		try
 		{
 			$db = DB::getConnection();
@@ -307,6 +330,10 @@ class UserService
 	}
 	function changeCarModel($id) {
 		$newCarModel = $_POST['changeCarModel'];
+
+		if ( !(preg_match( '/^[a-zA-Z0-9]{1,20}$/' ,$newCarModel) ) )
+			return false;
+
 		try
 		{
 			$db = DB::getConnection();
@@ -693,6 +720,7 @@ class UserService
 
 	function insertComment($id_voznje, $ocjena, $komentar) {
 		$ocjena = round( $ocjena );
+
 		$id = UserService::getIdByUsername($_SESSION['username']);
 		try
 		{

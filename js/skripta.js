@@ -45,6 +45,73 @@ function handleLogin(event) {
     });
 }
 
+function handleNewPassword(event){
+  var username = $("#newpassus").html();
+  var password = $("#newpass").val();
+  console.log("ispis: " + username + " " + password);
+  $.ajax(
+  {
+    url: window.location.pathname + "?rt=home/setNewPassword",
+    data: { username: username, password: password},
+    type: 'POST',
+    dataType: "json",
+    success: function( data )
+    {
+      console.log("data je ", JSON.stringify(data));
+      alert( data.msg );
+      window.location.href = window.location.pathname+"?rt=home/login";
+    },
+    error: function( xhr, status )
+    {
+      console.log("handleLogin :: error :: status = " + status );
+    }
+  });
+}
+
+function handleReset(event) {
+    var email = $("#exampleInputEmail1").val();
+    $.ajax(
+    {
+      url: window.location.pathname + "?rt=home/forgotPassword",
+      data: { email: email},
+      type: 'POST',
+      dataType: "json",
+      success: function( data )
+      {
+        console.log("data je ", JSON.stringify(data));
+        alert( data.msg );
+        window.location.href = window.location.pathname+"?rt=home";
+      },
+  		error: function( xhr, status )
+      {
+        console.log("handleLogin :: error :: status = " + status );
+  		}
+    });
+}
+
+function handleSignUp(event) {
+    var username = $("#exampleInputUsername1").val();
+    var email = $("#exampleInputEmail1").val();
+    var password = $("#psw").val();
+    $.ajax(
+    {
+      url: window.location.pathname + "?rt=home/signup",
+      data: { username: username, email: email, password: password},
+      type: 'POST',
+      dataType: "text",
+      success: function( data )
+      {
+        console.log("data je ", JSON.stringify(data));
+        alert( data.msg );
+        window.location.href = window.location.pathname+"?rt=home";
+      },
+  		error: function( xhr, status )
+  		{
+      console.log("handleLogin :: error :: status = " + status );
+  		}
+    });
+}
+
 function sakrijMenu(){
     var vr = $("#sakrijMenu").html();
 
@@ -79,6 +146,9 @@ $(document).ready(
     function() {
         $("#lgout").on("click", handleLogout);
         $("#login").on("click", handleLogin);
+        $("#resetbtn").on("click", handleReset);
+        $("#newpassbtn").on("click", handleNewPassword);
+        $("#sgnup").on("click", handleSignUp);
 
         // provjera druge lozinke
         $("#cnf").on("input", handlePasswords);
@@ -180,6 +250,12 @@ function ocjenjenaVoznja(event) {
     var komentar = $("#komentar").val();
     if ( ocjena < 1 || ocjena > 5 )
         alert("The grade has to be between 1 and 5");
+
+    var reg = /^([\w.,]|\s){2,100}$/;    // slova, znamenke, underscore, tocka, zarez
+
+    if ( reg.test(komentar) === false )
+        alert("The comment has to have between 2 and 100 characters (letters, numbers, spaces, dot or comma)");
+
     else {
         $.ajax(
             {

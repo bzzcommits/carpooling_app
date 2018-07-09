@@ -89,3 +89,6 @@ require_once __SITE_PATH . '/view/menuTheRest.php';
 <?php
 require_once __SITE_PATH . '/view/_footer.php';
 ?>
+<script src="<?php echo __SITE_URL;?>/js/skripta2.js"></script>
+<script src="https://maps.googleapis.com/maps/api/js?key=AIzaSyBvLGiyFyIoKmyEGYIfDWk-IxAxq2zvfwA&libraries=places&callback=initMap">
+</script>

@@ -44,7 +44,7 @@ class AuthenticationService{
 
     try
 		{
-			$st = $db->prepare( 'INSERT INTO users VALUES( DEFAULT, :username, :password, NULL, NULL, :mail, :reg_seq, 0)' );
+			$st = $db->prepare( 'INSERT INTO users VALUES( DEFAULT, :username, :password, NULL, NULL, :mail, :reg_seq, 0, "")' );
 			$st->execute( array( 'username' => $username,
 				                 'password' => password_hash( $password, PASSWORD_DEFAULT ),
 				                 'mail' => $email,
@@ -55,8 +55,8 @@ class AuthenticationService{
 
     // Sad mu još pošalji mail
 		$to       = $email;
-		$subject  = 'Registracijski mail';
-		$message  = 'Poštovani ' . $username . "!\nZa dovršetak registracije kliknite na sljedeći link: ";
+		$subject  = 'Registration e-mail';
+		$message  = 'Hello, ' . $username . "!\nIn order to complete your registration, click on this link: ";
 		$message .= 'http://' . $_SERVER['SERVER_NAME'] . htmlentities( dirname( $_SERVER['PHP_SELF'] ) ) . '/index.php?rt=home&niz=' . $reg_seq . "\n";
 		$headers  = 'From: rp2@studenti.math.hr' . "\r\n" .
 		            'Reply-To: rp2@studenti.math.hr' . "\r\n" .
@@ -96,6 +96,63 @@ class AuthenticationService{
       catch( PDOException $e ) { exit( 'Greška u bazi: ' . $e->getMessage() ); }
     }
     return true;
+  }
+
+  function resetPassword( $email )
+  {
+    try
+		{
+  		$db = DB::getConnection();
+			$st = $db->prepare('SELECT username, registration_sequence FROM users WHERE mail=:email');
+			$st->execute( array( 'email' => $email ) );
+		}
+		catch( PDOException $e ) { exit( 'PDO error ' . $e->getMessage() ); }
+
+    if( $st->rowCount() === 0 )
+      return 0;
+
+    $row = $st->fetch();
+
+		$to       = $email;
+		$subject  = 'New password';
+		$message  = 'Hello! In order to set a new password to your Blablacar account, click on this link: ';
+		$message .= 'http://' . $_SERVER['SERVER_NAME'] . htmlentities( dirname( $_SERVER['PHP_SELF'] ) ) . '/index.php?rt=home&np=' . $row['registration_sequence'] . '&npusername=' . $row['username'] . "\n";
+		$headers  = 'From: rp2@studenti.math.hr' . "\r\n" .
+		            'Reply-To: rp2@studenti.math.hr' . "\r\n" .
+		            'X-Mailer: PHP/' . phpversion();
+
+		$isOK = mail($to, $subject, $message, $headers);
+
+		if( !$isOK )
+			return -1;
+
+    return 1;
+  }
+
+  function doTheyMatch( $registration_sequence, $username )
+  {
+    try
+		{
+			$db = DB::getConnection();
+			$st = $db->prepare( 'SELECT * FROM users WHERE username = :username AND registration_sequence = :registration_sequence' );
+      $st->execute( array( 'registration_sequence' => $registration_sequence, 'username' => $username ) );
+		}
+		catch( PDOException $e ) { exit( 'PDO error ' . $e->getMessage() ); }
+
+    if( $row = $st->fetch() )
+      return 1;
+    return 0;
+  }
+
+  function changePassword( $password, $username )
+  {
+    try
+		{
+      $db = DB::getConnection();
+      $st = $db->prepare( 'UPDATE users SET password_hash=:password_hash WHERE username = :username' );
+			$st->execute( array( 'username' => $username, 'password_hash' => password_hash( $password, PASSWORD_DEFAULT ) ) );
+		}
+		catch( PDOException $e ) { exit( 'PDO error ' . $e->getMessage() ); }
   }
 };
 
