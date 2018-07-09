@@ -186,8 +186,10 @@ $(document).ready(
 
         $("#sakrijMenu").on( "click", sakrijMenu);
 
-        $("#DateNew").datepicker({dateFormat: "yy-mm-dd"});
-        $("#Date").datepicker({dateFormat: "yy-mm-dd"});
+        $("#DateNew").datepicker({dateFormat: "yy-mm-dd",
+                                    minDate:new Date()});
+        $("#Date").datepicker({dateFormat: "yy-mm-dd",
+                                    minDate:new Date()});
 
         $("#searchId").on( "click", pronadiKorisnika );
 
