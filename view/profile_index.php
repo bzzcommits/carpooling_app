@@ -153,7 +153,7 @@ require_once __SITE_PATH . '/view/_header.php';
                   <div class="card card-register mx-auto mt-5">
                   <div class="card-header">YOUR PAST DRIVES</div>
                   <div class="card-body">
-          <?php  for ($i = 0; $i < count($poljeMojihVoznji); ++$i) {
+          <?php  for ($i = 0; $i < count($poljeProslihVoznji); ++$i) {
                   $phpdate = strtotime($poljeProslihVoznji[$i][2]);
                   $phpdate = date( 'd M Y', $phpdate );
                   echo '<div class="form-group">';
