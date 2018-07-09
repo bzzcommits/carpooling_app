@@ -19,10 +19,7 @@ require_once __SITE_PATH . '/view/_header.php';
 	<div class="card-body">
 		<form method="post" action="<?php echo __SITE_URL; ?>/index.php?rt=user/updateUserInfo">
 
-                                <!-- OVDJE IDE SLIKA-->
-                                <!-- treba omoguciti da se promijeni / ucita nova slika -->
-
-                        <div class="form-group">
+            <div class="form-group">
 				<label for="changeUsername">USERNAME</label>
 				<input class="form-control" id="changeUsername" type="text" placeholder="Enter new username" name="changeUsername" />
 			</div>
@@ -41,16 +38,18 @@ require_once __SITE_PATH . '/view/_header.php';
 				<label for="changeMail">E-MAIL</label>
 				<input class="form-control" id="changeMail" type="text" placeholder="Enter new e-mail" name="changeMail" />
 			</div>
+            <?php
+            if ( $driver === true ) { ?>
+                <div class="form-group">
+    				<label for="changeCarType">CAR TYPE</label>
+    				<input class="form-control" id="changeCarType" type="text" placeholder="Enter new car type" name="changeCarType" />
+    			</div>
 
-                        <div class="form-group">
-				<label for="changeCarType">CAR TYPE</label>
-				<input class="form-control" id="changeCarType" type="text" placeholder="Enter new car type" name="changeCarType" />
-			</div>
-
-			<div class="form-group">
-				<label for="changeCarModel">CAR MODEL</label>
-				<input class="form-control" id="changeCarModel" type="text" placeholder="Enter new car model" name="changeCarModel" />
-			</div>
+    			<div class="form-group">
+    				<label for="changeCarModel">CAR MODEL</label>
+    				<input class="form-control" id="changeCarModel" type="text" placeholder="Enter new car model" name="changeCarModel" />
+    			</div>
+       <?php } ?>
 
 			<button type="submit" name="saveChange" class="btn btn-primary btn-block">Save changes!</button>
 			<button type="submit" name="dropChange" class="btn btn-primary btn-block">Drop changes!</button>
