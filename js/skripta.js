@@ -98,7 +98,7 @@ function handleSignUp(event) {
       url: window.location.pathname + "?rt=home/signup",
       data: { username: username, email: email, password: password},
       type: 'POST',
-      dataType: "text",
+      dataType: "json",
       success: function( data )
       {
         console.log("data je ", JSON.stringify(data));
@@ -142,6 +142,29 @@ function sakrijMenu(){
 
 }
 */
+
+function checkIfDriver(event){
+  $.ajax(
+  {
+    url: window.location.pathname + "?rt=user/chechIfDriver",
+    data: {check:1},
+    type: 'POST',
+    dataType: "json",
+    success: function( data )
+    {
+      console.log("data je ", JSON.stringify(data));
+      if(data.error === "")
+        window.location.href = window.location.pathname+"?rt=pretrazi/offers";
+      else
+        alert( data.error );
+    },
+    error: function( xhr, status )
+    {
+      console.log("handleLogin :: error :: status = " + status );
+    }
+  });
+}
+
 $(document).ready(
     function() {
         $("#lgout").on("click", handleLogout);
@@ -158,9 +181,8 @@ $(document).ready(
         $("#search_drive").on("click", function(){
           window.location.href = window.location.pathname+"?rt=pretrazi";
         });
-        $("#offer_drive").on("click", function(){
-          window.location.href = window.location.pathname+"?rt=pretrazi/offers";
-        });
+
+        $("#offer_drive").on("click", checkIfDriver);
 
         $("#sakrijMenu").on( "click", sakrijMenu);
 
@@ -272,4 +294,3 @@ function ocjenjenaVoznja(event) {
         );
     }
 }
-

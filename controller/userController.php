@@ -182,6 +182,20 @@ class userController extends BaseController
 		$this->registry->template->show( 'new_driver' );
 	}
 
+	public function chechIfDriver() {
+		$message = [];
+		if(isset($_POST['check']) && $_SESSION['user_id']){
+			$us = new UserService;
+			if( $us->isDriver(($_SESSION['user_id'])) )
+				$message[ 'error' ] = "";
+			else
+				$message[ 'error' ] = "You have to become a driver in order to offer a drive!";
+			userController::sendJSONandExit($message);
+		}
+		else
+			header( 'Location: ' . __SITE_URL . '/index.php?rt=home' );
+	}
+
 	public function updateDriverInfo() {
 
 		$us = new UserService;
