@@ -766,13 +766,14 @@ class UserService
 		$ukupan_rating = (int)$row['rating']; $broj_ocjena = (int)$row['grade_number'];
 		$ukupan_rating += (int)$ocjena;
 		$broj_ocjena += 1;
+		$realrating = $ukupan_rating / $broj_ocjena;
 
 		//updateamo taj redak s novim podacima
 		try
 		{
 			$db = DB::getConnection();
-			$st = $db->prepare('UPDATE drivers SET rating=:rating, grade_number=:grade_number WHERE driver_id=:driver_id');
-			$st->execute( array('rating' => $ukupan_rating, 'grade_number' => $broj_ocjena, 'driver_id' => $id_vozaca) );
+			$st = $db->prepare('UPDATE drivers SET rating=:rating, grade_number=:grade_number realrating=:realrating WHERE driver_id=:driver_id');
+			$st->execute( array('rating' => $ukupan_rating, 'grade_number' => $broj_ocjena, 'driver_id' => $id_vozaca, 'realrating' => $realrating ) );
 		}
 		catch( PDOException $e )
 		{
