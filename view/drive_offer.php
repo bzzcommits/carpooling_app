@@ -42,7 +42,7 @@ require_once __SITE_PATH . '/view/menuTheRest.php';
 
 			<div class="form-group">
 				<label for="DateNew">Date (yyyy-mm-dd)</label>
-				<input class="form-control" id="DateNew" type="text" placeholder="Enter date" name="date_new" />
+				<input class="form-control" id="DateNew" type="text" placeholder="Enter date" name="date_new" readonly="true" />
 			</div>
 
 			<div class="form-group">
@@ -76,7 +76,7 @@ require_once __SITE_PATH . '/view/menuTheRest.php';
     <footer class="sticky-footer">
       <div class="container">
         <div class="text-center">
-          <small>Copyright © 2018</small>
+          <small>Copyright ï¿½ 2018</small>
         </div>
       </div>
     </footer>
