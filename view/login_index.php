@@ -15,8 +15,8 @@ require_once __SITE_PATH . '/view/_header.php';
 	  <div class="card-header">Login</div>
 	  <div class="card-body">
 		  <div class="form-group">
-			<label for="exampleInputEmail1">Username</label>
-			<input class="form-control _username" id="exampleInputEmail1" type="text" placeholder="Username" name="username" />
+			<label for="exampleInputUsername1">Username</label>
+			<input class="form-control _username" id="exampleInputUsername1" type="text" placeholder="Username" name="username" />
 		  </div>
 		  <div class="form-group">
 			<label for="exampleInputPassword1">Password</label>
