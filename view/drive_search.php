@@ -83,7 +83,7 @@ else {
 				<?php
 					foreach( $resDrive as $x ){
                 echo '<tr>' .
-							 '<td>' . $x->username . '</td>' .
+							 '<td><a href="' . __SITE_URL . '/index.php?rt=otherUser&name=' .   $x->username . '">' .   $x->username . '</a></td>' .
                '<td>' . $x->rating . '</td>' .
 						   '<td>' . $x->start_time . '</td>' .
 						   '<td>' . $x->end_time . '</td>' .
