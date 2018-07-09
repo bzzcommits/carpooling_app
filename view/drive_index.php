@@ -53,7 +53,7 @@ require_once __SITE_PATH . '/view/menuTheRest.php';
 
     			<div class="form-group">
     				<label for="Date">Date (yyyy-mm-dd)</label>
-    				<input class="form-control" id="Date" type="text" placeholder="Enter date" name="date" />
+    				<input class="form-control" id="Date" type="text" placeholder="Enter date" name="date" readonly="true" />
     			</div>
 
           Sorted by
