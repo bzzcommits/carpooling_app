@@ -13,12 +13,24 @@ class otherUserController extends BaseController
                 - posebno ocjene + komentar */
 	public function index()
 	{
-		$username = $_GET['name'];
+		if ( isset( $_GET['name'] ) )
+            $username = $_GET['name'];
+        else if ( isset( $_POST['searchname'] ) )
+            $username = $_POST['searchname'];
+        else{
+            header( 'Location: ' . __SITE_URL . '/index.php?rt=home' );
+            exit(0);
+        }
 		if ( $username === $_SESSION['username'] )
 			header( 'Location: ' . __SITE_URL . '/index.php?rt=user' );
 
 		$us = new UserService;
 		$user_id =$us->getIdByUsername($username);
+
+        if ( $user_id === null ){
+            header( 'Location: ' . __SITE_URL . '/index.php?rt=home' );
+            exit(0);
+        } 
 
 		// Kako bih znala trebam li ispisati Follow ili Unfollow button.
 		$this->registry->template->follow = $us->checkIfFollowing($_GET['name']);
