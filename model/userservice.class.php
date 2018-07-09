@@ -631,8 +631,33 @@ class UserService
 	}
 
 	function deleteDrive($id_voznje) {
-		// preseli voznju $id_voznje iz drive u deleted_drive
+		// preseli voznju $id_voznje iz drive u deleted_drive (samo ako je netko rezervirao vec)
 
+		// ako niko nije rezervirao, odmah izbrisi
+		try
+		{
+			$db = DB::getConnection();
+			$st = $db->prepare('SELECT drive_id FROM ratings WHERE drive_id LIKE :drive_id');
+			$st->execute( array('drive_id' => $id_voznje, ) );
+		}
+		catch( PDOException $e )
+		{
+			exit( '***PDO error in class UserService function deleteDrive:  ' . $e->getMessage() );
+		}
+
+		if ( $st->rowCount() === 0 ) {
+			try
+			{
+				$db = DB::getConnection();
+				$st = $db->prepare('DELETE FROM drive WHERE drive_id LIKE :drive_id');
+				$st->execute( array('drive_id' => $id_voznje, ) );
+			}
+			catch( PDOException $e )
+			{
+				exit( 'PDO error in class UserService function deleteDrive:  ' . $e->getMessage() );
+			}
+			return;
+		}
 		// izvadi voznju iz drive
 		try
 		{
