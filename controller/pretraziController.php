@@ -17,8 +17,8 @@ class PretraziController extends BaseController
 		$ls = new CarService();
 
 		// Ako nam forma nije u $_POST poslala podatke u ispravnom obliku, preusmjeri ponovno na formu.
-		if( !isset( $_POST['start_place'] ) || !preg_match( '/^[a-zA-Z -]+$/', $_POST['start_place'] )
-		 		|| !isset( $_POST['end_place'] ) || !preg_match( '/^[a-zA-Z -]+$/', $_POST['end_place'] )
+		if( !isset( $_POST['start_place'] ) || !preg_match( '/^[a-zA-Z -,]+$/', $_POST['start_place'] )
+		 		|| !isset( $_POST['end_place'] ) || !preg_match( '/^[a-zA-Z -,]+$/', $_POST['end_place'] )
 				|| !isset( $_POST['date'] ) || !preg_match( '/^[0-9]{4}-[0-9]{2}-[0-9]{2}$/', $_POST['date']))
 		{
 			header( 'Location: ' . __SITE_URL . '/index.php?rt=pretrazi/index' );
@@ -53,8 +53,8 @@ class PretraziController extends BaseController
 		 //preg match za date uzeti u obzir veljacu i 30 i 31 dan
 		 //preg match za vrijeme uzeti 00, 01, 02, .. 09, 10, 11, 12, .. 19, 20, 21, 22, ..
 
-		 if ( !isset( $_POST['start_place_new'] ) || !preg_match( '/^[a-zA-Z -]+$/', $_POST['start_place_new'] )
-			 || !isset( $_POST['end_place_new'] ) || !preg_match( '/^[a-zA-Z -]+$/', $_POST['end_place_new'] )
+		 if ( !isset( $_POST['start_place_new'] ) || !preg_match( '/^[a-zA-Z -,]+$/', $_POST['start_place_new'] )
+			 || !isset( $_POST['end_place_new'] ) || !preg_match( '/^[a-zA-Z -,]+$/', $_POST['end_place_new'] )
 			 || !isset( $_POST['date_new'] ) || !preg_match( '/^[0-9]{4}-[0-9]{2}-[0-9]{2}$/', $_POST['date_new'] ) //|| !preg_match( '/^20[1-9][0-9]-((((0[13578])|(1[02]))-((0[1-9])|([12][0-9])|(3[0-1])))|((0[469]|11)-((0[1-9])|([12][0-9])|30))|(02-((0[1-9])|([12][0-9])))))$/', $_POST['date_new'] )
 			 || !isset( $_POST['start_time_new'] ) || !preg_match( '/^(([0-1][0-9])|(2[0-3])):[0-5][0-9]$/', $_POST['start_time_new'] )
 			 || !isset( $_POST['end_time_new'] ) || !preg_match( '/^(([0-1][0-9])|(2[0-3])):[0-5][0-9]$/', $_POST['end_time_new'] )
