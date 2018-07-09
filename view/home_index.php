@@ -30,6 +30,10 @@ require_once __SITE_PATH . '/view/_header.php';
     <div class="container-fluid">
 	  <h2> Welcome! </h2>
       <hr>
+      <?php
+      if ( !isset( $_SESSION['user_id'] ) )
+        echo "<p> Please consider registering to see all our features! </p>"
+      ?>
 	  <div class="imgbox">
 		<img class="fit-picture" src=" <?php echo __SITE_URL; ?>/view/car.jpg" id="bg">
 	  </div>
@@ -55,7 +59,7 @@ require_once __SITE_PATH . '/view/_header.php';
           <div class="modal-header">
             <h5 class="modal-title" id="exampleModalLabel">Ready to Leave?</h5>
             <button class="close" type="button" data-dismiss="modal" aria-label="Close">
-              <span aria-hidden="true">Ã—</span>
+              <span aria-hidden="true">×</span>
             </button>
           </div>
           <div class="modal-body">Select "Logout" below if you are ready to end your current session.</div>
