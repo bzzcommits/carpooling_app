@@ -28,12 +28,11 @@ require_once __SITE_PATH . '/view/_header.php';
 
   <div class="content-wrapper">
     <div class="container-fluid">
-	  <h2> Welcome back! </h2>
+	  <h2> Welcome! </h2>
       <hr>
 	  <div class="imgbox">
 		<img class="fit-picture" src=" <?php echo __SITE_URL; ?>/view/car.jpg" id="bg">
 	  </div>
-      <p>Tu možemo ubaciti neki tekst i možemo promijeniti sliku, ovo je za probu.</p>
     </div>
     <!-- /.container-fluid-->
     <!-- /.content-wrapper-->
