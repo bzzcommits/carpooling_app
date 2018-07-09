@@ -76,7 +76,7 @@ require_once __SITE_PATH . '/view/menuTheRest.php';
     <footer class="sticky-footer">
       <div class="container">
         <div class="text-center">
-          <small>Copyright Â© 2018</small>
+          <small>Copyright © 2018</small>
         </div>
       </div>
     </footer>
@@ -89,3 +89,6 @@ require_once __SITE_PATH . '/view/menuTheRest.php';
 <?php
 require_once __SITE_PATH . '/view/_footer.php';
 ?>
+<script src="<?php echo __SITE_URL;?>/js/skripta3.js"></script>
+<script src="https://maps.googleapis.com/maps/api/js?key=AIzaSyBvLGiyFyIoKmyEGYIfDWk-IxAxq2zvfwA&libraries=places&callback=initMap2">
+</script>
