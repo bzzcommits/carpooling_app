@@ -8,15 +8,15 @@
         </li>
 
 	  </ul>
-		<!-- tipka za sakriti menu, ostaviti samo ikone, treba napraviti js -->
+		<!-- tipka za sakriti menu, ostaviti samo ikone, treba napraviti js
       <ul class="navbar-nav sidenav-toggler">
         <li class="nav-item">
-        <!-- id="sidenavToggler" -->
+          id="sidenavToggler" 
           <a class="nav-link text-center" id="sakrijMenu">
             <i class="fa fa-fw fa-angle-left"></i>
           </a>
         </li>
-      </ul>
+      </ul> -->
 
       <?php
 	  require_once __SITE_PATH . '/view/upperRightCorner.php';
