@@ -103,7 +103,10 @@ class UserService
 		{
 			exit( 'PDO error in class UserService function getIdByUsername:  ' . $e->getMessage() );
 		}
-
+        
+        if ( $st->rowCount() === 0 )
+            return null;
+        
 		$row = $st->fetch();
 		$id = $row['id'];
 		return $id;
