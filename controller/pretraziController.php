@@ -35,12 +35,12 @@ class PretraziController extends BaseController
 		$this->registry->template->show( 'drive_search' );
 	}
 
+
 	public function rezerviraj()
 	{
 		$ls = new CarService();
 		$this->registry->template->resDrive = $ls->reserveDrive($_POST['rezervacija']);
-		$this->registry->template->show( 'drive_search' );
-
+		$this->registry->template->show( 'drive_index' );
 	}
 
 	  public function newOffer(){

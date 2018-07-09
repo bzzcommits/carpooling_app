@@ -561,7 +561,34 @@ class UserService
 
 	function deleteReservation($id_voznje) {
 		$id = UserService::getIdByUsername($_SESSION['username']);
+
 		try
+		{
+			$db = DB::getConnection();
+			$st = $db->prepare( 'SELECT place_number FROM drive WHERE drive_id=:id_voznje');
+			$st->execute( array( 'id_voznje' => $id_voznje));
+		}
+		catch( PDOException $e )
+		{
+			exit( 'PDO error ' . $e->getMessage() );
+		}
+
+		$sm = $st->fetch();
+		$slobodnih_mjesta = $sm['place_number'];
+		$slobodnih_mjesta++; //otkazana je rezervacija, moramo povecati broj slobodnih mjesta
+
+		try //update-amo broj slobodnih mjesta
+		{
+			$db = DB::getConnection();
+			$st = $db->prepare( 'UPDATE drive SET place_number =:slobodnih_mjesta WHERE drive_id =:id_voznje');
+			$st->execute( array( 'id_voznje' => $id_voznje, 'slobodnih_mjesta' => $slobodnih_mjesta));
+		}
+		catch( PDOException $e )
+		{
+			exit( 'PDO error ' . $e->getMessage() );
+		}
+
+		try //maknemo iz tablice raitings
 		{
 			$db = DB::getConnection();
 			$st = $db->prepare('DELETE FROM ratings WHERE drive_id LIKE :drive_id AND user_id LIKE :user_id');

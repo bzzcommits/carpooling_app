@@ -62,19 +62,61 @@ class CarService
 		return $arr;
 	}
 
+	//provjeravam je li korisnik vec rezervirao tu voznju
+	//ako nije vraca 0, ako je vraca 1
+	function has_reserved($drive_id)
+	{
+
+		$id = UserService::getIdByUsername($_SESSION['username']);
+
+		try
+		{
+			$db = DB::getConnection();
+			$st2 = $db->prepare('SELECT drive_id, user_id FROM ratings WHERE drive_id=:drive_id AND user_id=:user_id');
+			$st2->execute( array('drive_id' => $drive_id, 'user_id' => $id) );
+		}
+		catch( PDOException $e ) { exit( 'PDO error ' . $e->getMessage() ); }
+
+		if ( $st2->rowCount() === 0 ) return 0;
+		else return 1;
+	}
+
 	function reserveDrive ($drive_id)
 	{
 		try
 		{
 			$db = DB::getConnection();
-			$st = $db->prepare( 'INSERT INTO ratings(drive_id, user_id, comment, rating)
-								VALUES (:drive_id, :user_id, "nema", -1)' );
-			$st->execute( array( 'drive_id' => $drive_id, 'user_id' => $_SESSION['user_id']) );
+			$st = $db->prepare( 'SELECT place_number FROM drive WHERE drive_id=:drive_id');
+			$st->execute( array( 'drive_id' => $drive_id));
 		}
-		catch( PDOException $e )
+		catch( PDOException $e ) { exit( 'PDO error ' . $e->getMessage() ); }
+
+		$sm = $st->fetch();
+		$slobodnih_mjesta = $sm['place_number'];
+		$id = UserService::getIdByUsername($_SESSION['username']);
+
+
+		if (CarService::has_reserved($drive_id)!==1)
 		{
-			exit( 'PDO error ' . $e->getMessage() );
+			$slobodnih_mjesta--;
+			try //dodamo rezerviranu voznju u raitings tablicu
+			{
+				$db = DB::getConnection();
+				$st = $db->prepare( 'INSERT INTO ratings(drive_id, user_id)
+								VALUES (:drive_id, :user_id)' );
+				$st->execute( array( 'drive_id' => $drive_id, 'user_id' => $id) );
+			}
+			catch( PDOException $e ) { exit( 'PDO error ' . $e->getMessage() ); }
+
+			try //azuriramo broj slobodnih mjesta
+			{
+				$db = DB::getConnection();
+				$st = $db->prepare( 'UPDATE drive SET place_number =:slobodnih_mjesta WHERE drive_id =:drive_id');
+				$st->execute( array( 'slobodnih_mjesta' => $slobodnih_mjesta, 'drive_id' => $drive_id));
+			}
+			catch( PDOException $e ) { exit( 'PDO error ' . $e->getMessage() ); }
 		}
+		else echo 'Already reserved'; // tu bi neki alert dodala 
 	}
 
 	//tu cemo unositi nove voznju
@@ -100,5 +142,4 @@ class CarService
 			exit( 'PDO error ' . $e->getMessage() );
 		}
 	}
-
 }

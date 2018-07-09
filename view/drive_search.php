@@ -82,17 +82,21 @@ else {
 
 				<?php
 					foreach( $resDrive as $x ){
-						echo '<tr>' .
+                echo '<tr>' .
 							 '<td>' . $x->username . '</td>' .
                '<td>' . $x->rating . '</td>' .
 						   '<td>' . $x->start_time . '</td>' .
 						   '<td>' . $x->end_time . '</td>' .
 						   '<td>' . $x->price . '</td>' .
-						   '<td>' . $x->place_number. '</td>' .
-							'<td> <form method="post" action="' . __SITE_URL . '/index.php?rt=pretrazi/rezerviraj">
+						   '<td>' . $x->place_number. '</td>';
+               if ($x->place_number > 0) 
+               { 
+                echo '<td> <form method="post" action="' . __SITE_URL . '/index.php?rt=pretrazi/rezerviraj">
 		 							<button type="submit" name="rezervacija" value="' . $x->drive_id . '" class="btn btn-primary btn-block">Reserve now!</button>
 		 						</form> </td>' .
 							 '</tr>';
+               }
+               else echo '<td>No available seats</td></tr>'; //ako nema slobodnih mjesta ne moze se rezervirati jer nema gumba za rezervaciju
 				    }
 				?>
 
