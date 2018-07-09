@@ -32,11 +32,10 @@ require_once __SITE_PATH . '/view/_header.php';
 	<div class="form-group">
             <div class="form-row">
               <div class="col-md-6">
-				<!-- pomocu js napraviti da je taj kliknut prilikom ucitavanja stranice -->
-                <button name="search_drive" class="btn btn-primary btn-block">Search for a drive</button>
+                <button id="search_drive" class="btn btn-primary btn-block">Search for a drive</button>
               </div>
               <div class="col-md-6">
-                <button name="offer_drive" class="btn btn-primary btn-block">Offer drive</button>
+                <button id="offer_drive" class="btn btn-primary btn-block">Offer drive</button>
               </div>
             </div>
           </div>
@@ -89,8 +88,8 @@ else {
 						   '<td>' . $x->end_time . '</td>' .
 						   '<td>' . $x->price . '</td>' .
 						   '<td>' . $x->place_number. '</td>';
-               if ($x->place_number > 0) 
-               { 
+               if ($x->place_number > 0)
+               {
                 echo '<td> <form method="post" action="' . __SITE_URL . '/index.php?rt=pretrazi/rezerviraj">
 		 							<button type="submit" name="rezervacija" value="' . $x->drive_id . '" class="btn btn-primary btn-block">Reserve now!</button>
 		 						</form> </td>' .
