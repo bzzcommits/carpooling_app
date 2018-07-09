@@ -3,15 +3,14 @@ if( isset( $_SESSION[ 'username' ] ) )
 {
 	//echo "<h1>" . $_SESSION[ 'username' ] . "</h1>";
   ?>
-  <ul class="navbar-nav ml-auto">        
-        
+  <ul class="navbar-nav ml-auto">
     <li class="nav-item">
     <!-- promijeniti action page -->
-      <form class="form-inline my-2 my-lg-0 mr-lg-2" method="post" action="<?php echo __SITE_URL; ?>/index.php?rt=user/searchUser">
+      <form class="form-inline my-2 my-lg-0 mr-lg-2" method="post" action="<?php echo __SITE_URL; ?>/index.php?rt=otherUser">
         <div class="input-group">
-          <input class="form-control" type="text" placeholder="Search for user..." id="searchUserId">
+          <input class="form-control" type="text" placeholder="Search for user..." id="searchname" name="searchname">
           <span class="input-group-append">
-            <button class="btn btn-primary" type="button" id="searchId">
+            <button class="btn btn-primary" type="submit" id="searchId">
               <i class="fa fa-search"></i>
             </button>
           </span>
