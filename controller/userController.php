@@ -24,6 +24,13 @@ class userController extends BaseController
 	}
 
 	public function changeUserInfo() {
+		$us = new UserService;
+		$user_id =$us->getIdByUsername($_SESSION['username']);
+		if ($us->isDriver($user_id) === true)
+			$this->registry->template->driver = true;
+		else
+			$this->registry->template->driver = false;
+
 		$this->registry->template->show( 'profile_update' );
 	}
 
@@ -201,19 +208,20 @@ class userController extends BaseController
 		$us = new UserService;
 		$user_id =$us->getIdByUsername($_SESSION['username']);
 
-		if ( isset($_POST['saveChange']) ) {
+		if ( isset($_POST['newDriver']) ) {
 			$flag = 0;
 			$errorMsg = array();
-			if ( isset($_POST['CarType']) && $_POST['CarType'] !== "" ){
-				$car_type = $_POST['CarType'];
-				$flag += 1;
+			if ( isset($_POST['newCarType']) ) {
+				$car_type = $_POST['newCarType'];
+				if (preg_match( '/^[a-zA-Z0-9]{1,20}$/', $car_type) )
+					$flag += 1;
 			}
 			else {
 				$errorMsg[] = "You have to enter the car type";
 			}
 
-			if ( isset($_POST['CarModel']) && $_POST['CarModel'] !=="" ){
-				$car_model = $_POST['CarModel'];
+			if ( isset($_POST['newCarModel']) && preg_match( '/^[a-zA-Z0-9]{1,20}$/', $_POST['newCarModel'] )){
+				$car_model = $_POST['newCarModel'];
 				$flag += 1;
 			}
 			else {
