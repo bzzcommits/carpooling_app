@@ -33,7 +33,7 @@ class otherUserController extends BaseController
         } 
 
 		// Kako bih znala trebam li ispisati Follow ili Unfollow button.
-		$this->registry->template->follow = $us->checkIfFollowing($_GET['name']);
+		$this->registry->template->follow = $us->checkIfFollowing($username);
 
 		if ($us->isDriver($user_id) === true){
 			$this->registry->template->driver = true;
