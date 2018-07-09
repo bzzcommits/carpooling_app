@@ -175,7 +175,7 @@ $(document).ready(
         $( "body" ).on( "click", "button.procitanaPoruka", procitanaPoruka );
         $( "body" ).on( "click", "button.ocjenjenaVoznja", ocjenjenaVoznja );
 
-        $(".suputnici").on("mouseover", prikazi_suputnike);
+        //$(".suputnici").on("mouseover", prikazi_suputnike);
     }
 );
 
